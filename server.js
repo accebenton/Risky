@@ -14,15 +14,15 @@ const port = 3000;
 //connect to sqlite
 const db = new sqlite3.Database('riskTool.db');
 
-/* test -- .get tells express to go to webpage '/'*/
+/* test -- .get tells express to go to webpage '/'
 app.get('/', (req, res) => {
     res.send('tick! first step complete');
   });
-
+*/
 
 //starts server so can go to browser - port 3000 common for local servers
 app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
+    console.log(`Server is running at http://localhost:${port}/home`);
   });
 
 
@@ -59,12 +59,13 @@ app.get('/addrisk', (req, res) => {
     const riskScore = likelihood * impact;
 
     let riskLevel = 'Low';
-    if (riskScore => 15){
-        riskLevel = 'Critical';
-    } else if (riskScore => 10){
-        riskLevel = 'High';
-    } else if (riskScore => 5){
-        riskLevel = 'Medium';
+
+    if (riskScore >= 6 && riskScore <= 10) {
+      riskLevel = 'Medium';
+    } else if (riskScore >= 11 && riskScore <= 15) {
+      riskLevel = 'High';
+    } else if (riskScore >= 16) {
+      riskLevel = 'Critical';
     }
 
     //insert into db
@@ -82,33 +83,10 @@ app.get('/addrisk', (req, res) => {
       );
     });
 
-/*-----------------VIEWING RISKS IN DB----------------------*/
-//when someone clicks on view risks, takes them to a new page which shows risks in table
-//request, coming from browser to server - response - send back to browser
-app.get('/viewrisks', (req, res) => {
-  const sql = 'SELECT * FROM risks';
-  db.all(sql, [], function(err, rows) {
-    //could change to return statement to stop before else clause runs
-    if (err) {
-      return res.send('Error loading risks.');
-    } 
-
-    let output = "Risks: \n";
-    
-    //loop through rows
-    for(let i = 0; i <rows.length; i++){
-      const risk = rows[i];
-      output += risk.title + '\n';
-    }
-
-    //show in browser as text just now, HTML later when updating code
-    res.type('text');
-    //sends output to browser
-    res.send(output);
-  });
-});
 
 
+
+//HOME PAGE ROUTE
 //when user clicks on html that is linked with /home this code will run
 app.get('/home', (req, res) => {
   // get all risks from db
@@ -119,7 +97,7 @@ app.get('/home', (req, res) => {
       return res.send('There was an error');
     }
     
-    //test, shows in browser my rows, backend connecting to front end
+    //test, shows in-browser my rows, backend connecting to front end
     //res.send(rows);
 
     //HTML PAGE SETUP
@@ -203,8 +181,8 @@ app.get('/home', (req, res) => {
               <table class="risks table">
                 <thead>
                   <tr>
-                    <th>Risk Name</th>
                     <th>ID</th>
+                    <th>Risk Name</th>
                     <th>Likelihood</th>
                     <th>Impact</th>
                     <th>Risk Level</th>
@@ -224,6 +202,10 @@ app.get('/home', (req, res) => {
           <td>${risk.likelihood}</td>
           <td>${risk.impact}</td>
           <td>${risk.risk_level}</td>
+          <td> 
+            <a href="/deleterisk?id=${risk.id}" class="btn btn-danger btn-sm">Delete</a>
+            <a href="/editrisk?id=${risk.id}" class="btn btn-secondary btn-sm">Edit</a>
+          </td>
         </tr>
       `;
     }
@@ -243,9 +225,143 @@ app.get('/home', (req, res) => {
   });
 });
 
+//DELETE RISK ROUTE
+app.get('/deleterisk', (req, res) => {
+  //get id from URL ie ?id=3
+  const id= req.query.id;
+
+  //check id was found
+  if(!id){
+    return res.send('No ID found');
+  }
+
+  //run sql query to delete ID's row
+  const sql = `DELETE FROM risks WHERE id = ?`;
+  db.run(sql, [id], function(err) {
+    if (err) {
+      return res.send('Error');
+    }
+
+    //redirect to home after deletion
+    res.redirect('/home');
+  });
+});
+
+/*EDIT ROUTE/ html form page*/
+app.get('/edit', (req, res) => {
+  // edit a risk that is already logged to table
+  const id = req.query.id;
+  //send error if id not given
+  if(!id){
+    return res.send('No id given');
+  }
+  const sql = `SELECT * risks WHERE id = ?`;
+
+  db.get(sql, [id], (err, risk) => {
+    //send error message if fails
+    if (err) {
+      return res.send('Error');
+    }
+    //send error msg if no risk found
+    if (!risk){
+      res.send('No risk found');
+    }
+
+    //HTML form appears once click edit button
+    let html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Edit Risk</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+      </head>
+      <!--EDIT RISK TABLE-->
+      <body class="container mt-5">
+        <h1>Edit Risk</h1>
+        <!--send form to /updaterisk when press submit-->
+        <form action="/updaterisk" method="get">
+          <input type="hidden" name="id" value="${risk.id}">
+          <div class="form-group">
+            <label>Risk Name</label>
+            <input type="text" name="title" class="form-control" value="${risk.title}" required>
+          </div>
+          <div class="form-group">
+            <label>Likelihood (1-5):</label>
+            <input type="number" name="likelihood" class="form-control" value="${risk.likelihood}" min="1" max="5" required>
+          </div>
+          <div class="form-group">
+            <label>Impact (1-5):</label>
+            <input type="number" name="impact" class="form-control" value="${risk.impact}" min="1" max="5" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Update Risk</button>
+        </form>
+      </body>
+      </html>
+    `;
+    res.send(html);
+
+  });
+});
+
+
+//runs when user submits Edit form
+app.get("/updaterisk", (req, res) => {
+  //get values from form
+  const id = req.query.id;
+  const title = req.query.title;
+  //converts string to number value
+  const likelihood = Number(req.query.likelihood);
+  const impact = Number(req.query.impact);
+
+  //checks if fields all have inputs, but maybe should change this since all fields might not need changed?
+   if (!id || !title || !likelihood || !impact) {
+    return res.send('input fields missing values');
+  }
+
+  //calculate risk score and risk level
+  const riskScore = likelihood * impact;
+  let riskLevel = 'Low';  // Default value
+
+  if (riskScore >= 6 && riskScore <= 10) {
+    riskLevel = 'Medium';
+  } else if (riskScore >= 11 && riskScore <= 15) {
+    riskLevel = 'High';
+  } else if (riskScore >= 16) {
+    riskLevel = 'Critical';
+  }
+
+  //update correct row in db with new values from form
+  const sql = `
+    UPDATE risks
+    SET title = ?, likelihood = ?, impact = ?, risk_level = ?
+    WHERE id = ?
+    `;
+
+  //run sql command above with values
+  db.run(sql, [title, likelihood, impact, riskLevel, id], function(err){
+    //error message 
+    if (err){
+      return res.send("Can't update risk");
+    }
+
+    //send user back to home page
+    res.redirect('/home');
+  });
+});
+
+
+
+
+
+
 
 
 /*NEXT STEPS:
-1. ADD DELETE BUTTON
-2. SHOW SUCCESS MESSAGE ONCE SUBMIT BUTTON CLICKED
+1. extra popup to confirm deletion beside delete button?
+2. SHOW SUCCESS MESSAGE ONCE SUBMIT BUTTON CLICKED+DELETE MESSAGE ONCE DELETED
+3. colour code risks
+4. Sort risks table 
+5. change edit form so that it appears on the /home route instead of new page (optional)
+6. change risk.title in table to risk.name so fields are consistently named
+7. Change /updaterisk route - currently all fields to have a value but only 1 value might need edited?
 */
