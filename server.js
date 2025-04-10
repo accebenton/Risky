@@ -248,14 +248,14 @@ app.get('/deleterisk', (req, res) => {
 });
 
 /*EDIT ROUTE/ html form page*/
-app.get('/edit', (req, res) => {
+app.get('/editrisk', (req, res) => {
   // edit a risk that is already logged to table
   const id = req.query.id;
   //send error if id not given
   if(!id){
     return res.send('No id given');
   }
-  const sql = `SELECT * risks WHERE id = ?`;
+  const sql = `SELECT * FROM risks WHERE id = ?`;
 
   db.get(sql, [id], (err, risk) => {
     //send error message if fails
@@ -364,4 +364,4 @@ app.get("/updaterisk", (req, res) => {
 5. change edit form so that it appears on the /home route instead of new page (optional)
 6. change risk.title in table to risk.name so fields are consistently named
 7. Change /updaterisk route - currently all fields to have a value but only 1 value might need edited?
-*/
+8. consider features that other software uses. look at research/literature. what is helpful in agile working?*/
