@@ -1,0 +1,91 @@
+------------------------PSEUDOCODE-------------------------
+***HOMEPAGE VIEW***
+
+When user is on homepage:
+	- GET all risks from db
+	- show risk in a table
+	- filter/search within rows from column headings
+		-if user selects filter (ie only open risks):
+			- GET only risks that are saved as 'open' from db
+			- Show in table
+
+
+***ADDING A RISK TO DATABASE THROUGH HTML FORM***
+
+When user fills out form and presses Submit:
+	GET values from form:
+		- risk name
+		- type of risk
+		- likelihood score
+		- Impact Score
+		- Assigned to (user)
+		- Description/notes
+
+	- Calculate Risk Score
+		- risk = likelihood x impact
+	- Status = open (new risk)
+	- ID added incrementally
+
+- Save to Database
+
+***UPDATING/EDITING A RISK***
+
+When user wants to update a risk (ie change risk level from 1 to 2):
+	- Click edit button beside chosen risk
+	- New form appears to allow different inputs
+	- UPDATE db with new values
+	- show success message
+	- Redirect back to home page with edited risk within table
+
+
+*** DELETING A RISK ***
+
+When user wants to delete a risk from table:
+	- click delete button beside chosen risk
+	- prompt user with message "are you sure you want to delete this risk?"
+	- if true:
+		- find risk by risk id in db
+		- remove risk
+	-redirect/refresh homepage to show updated table
+
+
+***ASSIGNING RISK TO USERS***
+
+When user adds new risk:
+    - input name (or ID?) of other user to assign task to
+
+OR 
+
+When editing a risk:
+    - field for searching ID/name of other user to assign task to
+    - Submit
+
+Once User is assigned:
+    - show name next to risk in table
+
+
+
+*** KANBAN VIEW/PAGE ***
+
+When user opens Kanban View:
+    - GET all risks from db
+    - FOR EACH risk:
+        - check status of risk (open, pending, closed)
+        - move into correct column on page
+
+Each column shos lists of risks with same status
+
+Each risk shows:
+    - Risk name
+    - type
+    - score/ Risk level
+    - Assigned to
+    - button at end "change status"
+
+
+When user wants to change status of risk:
+    - GET id of chosen risk
+    - GET new status from button label
+    - SEND request to server
+    - redirect user back to KANBAN VIEW/PAGE which shows updated risk with new status
+

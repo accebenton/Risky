@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8" />
+    <link rel="stylesheet" href="style.css" />
+    <!-- bootstrap css-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" 
+        rel="stylesheet" 
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" 
+        crossorigin="anonymous">
+    <script src="server.js"></script>
+    <!-- jQuery, Popper.js, and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" 
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" 
+        crossorigin="anonymous">
+    </script>
+    <title>Edit Risk</title>
+  </head>
+    <!--EDIT RISK TABLE-->
+    <body class="container mt-5">
+    <h1>Edit Risk</h1>
+    <!--send form to /updaterisk when press submit-->
+    <form action="/updaterisk" method="get">
+        <input type="hidden" name="id" value="${risk.id}">
+        <div class="form-group">
+        <label>Risk Name</label>
+        <input type="text" name="title" class="form-control" required placeholder="Risk Name" >
+        </div>
+        <div class="form-group">
+        <label>Likelihood (1-5):</label>
+        <input type="number" name="likelihood" class="form-control" value="${risk.likelihood}" min="1" max="5" required placeholder="1-5">
+        </div>
+        <div class="form-group">
+        <label>Impact (1-5):</label>
+        <input type="number" name="impact" class="form-control" value="${risk.impact}" min="1" max="5" required placeholder = "1-5">
+        </div>
+        <button type="submit" class="btn btn-primary">Update Risk</button>
+    </form>
+    </body>
+</html>
