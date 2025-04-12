@@ -53,8 +53,9 @@ db.run(`
       status TEXT
     )
   `);
-//forgot to add assigned to column - will comment this out after run once -- added in sql above anyway
+//forgot to add columns - will comment this out after run once -- added in sql above anyway
 //db.run(`ALTER TABLE risks ADD COLUMN assigned_to TEXT`);
+//db.run(`ALTER TABLE risks ADD COLUMN status TEXT`);
 
 /*ADD RISK ROUTE */
 //route for newly added risk to db--when user visits browser, it will add risk to table
@@ -65,9 +66,10 @@ app.get('/addrisk', (req, res) => {
     const likelihood = req.query.likelihood; // scale of 1–5
     const impact = req.query.impact;     // scale of 1–5
     const assigned_to = req.query.assigned_to;
+    const status = req.query.status;
     //check if all values are present
-    if (!title || !likelihood || !impact){
-      return res.send('Please provide title, likelihood and impact.')
+    if (!title || !likelihood || !impact || !assigned_to || !status) {
+      return res.send('Please provide title, likelihood, impact, assigned user, and status.');
     }
 
     //calculate risk from OWASP matrix
@@ -85,8 +87,8 @@ app.get('/addrisk', (req, res) => {
 
     //insert into db
     db.run(
-        `INSERT INTO risks (title, likelihood, impact, risk_level, assigned_to) VALUES (?, ?, ?, ?, ?)`,
-        [title, likelihood, impact, riskLevel, assigned_to],
+        `INSERT INTO risks (title, likelihood, impact, risk_level, assigned_to, status) VALUES (?, ?, ?, ?, ?, ?)`,
+        [title, likelihood, impact, riskLevel, assigned_to, status],
         /*this function runs after code is inserted - if error, then return (response.send) msg
         to browser. if not, risk added*/
         function(err) {
@@ -227,6 +229,16 @@ app.get('/home', (req, res) => {
                 <label for="impact">Impact (1-5):</label>
                 <input type="number" class="form-control" id="impact" name="impact" min="1" max="5" required>
               </div>
+            <!-- risk status input-->
+            <div class="form-group">
+              <label for="status">Status:</label>
+              <select class="form-control" id="status" name="status" required>
+                <!-- selected open as default, so all new risks have open status-->
+                <option value="Open" selected>Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Closed">Closed</option>
+              </select>
+            </div>
             <!-- assigned to user input-->
               <div class="form-group">
                 <label for="assigned_to">Assign to:</label>
@@ -257,6 +269,7 @@ app.get('/home', (req, res) => {
                     <th>Risk Name</th>
                     <th>Likelihood</th>
                     <th>Impact</th>
+                    <th>Status</th>
                     <th>Risk Level</th>
                     <th>Assigned To</th>
                   </tr>
@@ -273,10 +286,11 @@ app.get('/home', (req, res) => {
           <td>${risk.title}</td>
           <td>${risk.likelihood}</td>
           <td>${risk.impact}</td>
+          <td>${risk.status}</td>
           <td>${risk.risk_level}</td>
           <td>${risk.assigned_to}</td>
-          <td>
           <!-- delete and edit buttons -->
+          <td>
             <a href="/deleterisk?id=${risk.id}" 
               class="btn btn-danger btn-sm"
               onclick="return confirm('Are you sure you want to delete this risk?');">Delete</a>
@@ -360,16 +374,31 @@ app.get('/editrisk', (req, res) => {
           <input type="hidden" name="id" value="${risk.id}">
           <div class="form-group">
             <label>Risk Name</label>
-            <input type="text" name="title" class="form-control" value="${risk.title}" required>
+            <input type="text" name="title" class="form-control" value="${risk.title}" >
           </div>
           <div class="form-group">
             <label>Likelihood (1-5):</label>
-            <input type="number" name="likelihood" class="form-control" value="${risk.likelihood}" min="1" max="5" required>
+            <input type="number" name="likelihood" class="form-control" value="${risk.likelihood}" min="1" max="5">
           </div>
           <div class="form-group">
             <label>Impact (1-5):</label>
-            <input type="number" name="impact" class="form-control" value="${risk.impact}" min="1" max="5" required>
+            <input type="number" name="impact" class="form-control" value="${risk.impact}" min="1" max="5">
           </div>
+          <!-- risk status input-->
+            <div class="form-group">
+              <label for="status">Status:</label>
+              <select class="form-control" id="status" name="status">
+                <!-- selected open as default, so all new risks have open status-->
+                <option value="Open" selected>Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Closed">Closed</option>
+              </select>
+            </div>
+            <!-- assigned to user input-->
+              <div class="form-group">
+                <label for="assigned_to">Assign to:</label>
+                <input type="text" class="form-control" id ="assigned_to" name="assigned_to" value=${risk.assigned_to}>
+              </div>
           <button type="submit" class="btn btn-primary">Update Risk</button>
         </form>
       </body>
@@ -435,12 +464,12 @@ app.get("/updaterisk", (req, res) => {
 
 /*NEXT STEPS:
 2. update colours of success messages. not clear that they are different, need to set time on how long message lasts
-2.2 dont like placement of message. 
+  2.2 dont like placement of message. 
 3. colour code risks
-4. Sort risks table 
 5. change edit form so that it appears on the /home route instead of new page (optional)
 6. change risk.title in table to risk.name so fields are consistently named
 7. Change /updaterisk route - currently all fields to have a value but only 1 value might need edited?
 8. consider features that other software uses. look at research/literature. what is helpful in agile working?
 9. need to add in security features for data protection
+10. separate edit html/homepage html file or keep in 1 file
 */
