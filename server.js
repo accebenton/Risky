@@ -4,6 +4,19 @@ const sqlite3 = require('sqlite3').verbose();
 
 //express function to create web app
 const app = express();
+//for session library
+const session = require('express-session');
+
+// for using express.session library
+// secret = internal encrypt session data 
+// resave = doesn't save if nothings changed
+// saveun = lets new session be stored
+app.use(session({
+  secret: 'risky_secret_key',  
+  resave: false,
+  saveUninitialized: true
+}));
+
 //tell express to use public folder cont html and css
 app.use(express.static('public'));
 
@@ -35,11 +48,12 @@ db.run(`
       title TEXT NOT NULL,
       likelihood INTEGER,
       impact INTEGER,
-      risk_level TEXT
+      risk_level TEXT,
+      assigned_to TEXT
     )
   `);
-
-
+//forgot to add assigned to column - will comment this out after run once -- added in sql above anyway
+//db.run(`ALTER TABLE risks ADD COLUMN assigned_to TEXT`);
 
 /*-------ADDING RISK TO DB---------------------*/
 //route for newly added risk to db--when user visits browser, it will add risk to table
@@ -49,7 +63,7 @@ app.get('/addrisk', (req, res) => {
     const title = req.query.title;
     const likelihood = req.query.likelihood; // scale of 1–5
     const impact = req.query.impact;     // scale of 1–5
-
+    const assigned_to = req.query.assigned_to;
     //check if all values are present
     if (!title || !likelihood || !impact){
       return res.send('Please provide title, likelihood and impact.')
@@ -70,14 +84,15 @@ app.get('/addrisk', (req, res) => {
 
     //insert into db
     db.run(
-        `INSERT INTO risks (title, likelihood, impact, risk_level) VALUES (?, ?, ?, ?)`,
-        [title, likelihood, impact, riskLevel],
+        `INSERT INTO risks (title, likelihood, impact, risk_level, assigned_to) VALUES (?, ?, ?, ?, ?)`,
+        [title, likelihood, impact, riskLevel, assigned_to],
         /*this function runs after code is inserted - if error, then return (response.send) msg
         to browser. if not, risk added*/
         function(err) {
             if (err) {
               return res.send('Something went wrong.');
             }
+            req.session.message = 'Risk added';
             res.redirect('/home');
           }
       );
@@ -91,6 +106,12 @@ app.get('/addrisk', (req, res) => {
 app.get('/home', (req, res) => {
   // get all risks from db
   const sql = `SELECT * FROM risks`;
+
+  //for success message using express.session
+  const message = req.session.message; 
+  //only show message once then clear
+  req.session.message = null;
+
 
   db.all(sql, [], function(err, rows) {
     if(err){
@@ -122,8 +143,15 @@ app.get('/home', (req, res) => {
         </script>
         <title>Risk Management Tool</title>
       </head>
-      <body>
-        <!--navigation bar-->
+      <body>`
+
+      //session message for success message upon adding/deleting/editng risk
+      if (message) {
+        html += `<div class="alert alert-success">${message}</div>`;
+      } 
+
+      html +=
+      `<!--navigation bar-->
         <div class="nav-bar">
           <div class="row">
             <div class="risky col-2">
@@ -173,6 +201,11 @@ app.get('/home', (req, res) => {
                 <label for="impact">Impact (1-5):</label>
                 <input type="number" class="form-control" id="impact" name="impact" min="1" max="5" required>
               </div>
+            <!-- assigned to user input-->
+              <div class="form-group">
+                <label for="assigned_to">Assign to:</label>
+                <input type="text" class="form-control" id ="assigned_to" name="assigned_to" placeholder="Enter user name">
+              </div>
               <!-- Submit button -->
               <button type="submit" class="btn btn-primary">Add Risk</button>
           </form>
@@ -186,11 +219,11 @@ app.get('/home', (req, res) => {
                     <th>Likelihood</th>
                     <th>Impact</th>
                     <th>Risk Level</th>
+                    <th>Assigned To</th>
                   </tr>
                 </thead>
                 <!--tbody is where the info is pulled to from the backend-->
-                <tbody>
-    `;
+                <tbody>`;
 
     //loop through each risk from db and add row to html table
     for (let i=0; i <rows.length; i++){
@@ -202,8 +235,12 @@ app.get('/home', (req, res) => {
           <td>${risk.likelihood}</td>
           <td>${risk.impact}</td>
           <td>${risk.risk_level}</td>
-          <td> 
-            <a href="/deleterisk?id=${risk.id}" class="btn btn-danger btn-sm">Delete</a>
+          <td>${risk.assigned_to}</td>
+          <td>
+          <!-- delete and edit buttons -->
+            <a href="/deleterisk?id=${risk.id}" 
+              class="btn btn-danger btn-sm"
+              onclick="return confirm('Are you sure you want to delete this risk?');">Delete</a>
             <a href="/editrisk?id=${risk.id}" class="btn btn-secondary btn-sm">Edit</a>
           </td>
         </tr>
@@ -213,10 +250,10 @@ app.get('/home', (req, res) => {
     html += ` 
                 </tbody>
               </table>
+            </div>
           </div>
-        </div>
-      </body>
-    </html>
+        </body>
+      </html>
       `;
 
 
@@ -241,7 +278,8 @@ app.get('/deleterisk', (req, res) => {
     if (err) {
       return res.send('Error');
     }
-
+    //for success message
+    req.session.message = 'Risk deleted';
     //redirect to home after deletion
     res.redirect('/home');
   });
@@ -343,7 +381,7 @@ app.get("/updaterisk", (req, res) => {
     if (err){
       return res.send("Can't update risk");
     }
-
+    req.session.message = 'Risk updated';
     //send user back to home page
     res.redirect('/home');
   });
@@ -357,11 +395,12 @@ app.get("/updaterisk", (req, res) => {
 
 
 /*NEXT STEPS:
-1. extra popup to confirm deletion beside delete button?
-2. SHOW SUCCESS MESSAGE ONCE SUBMIT BUTTON CLICKED+DELETE MESSAGE ONCE DELETED
+2. update colours of success messages. not clear that they are different, need to set time on how long message lasts
 3. colour code risks
 4. Sort risks table 
 5. change edit form so that it appears on the /home route instead of new page (optional)
 6. change risk.title in table to risk.name so fields are consistently named
 7. Change /updaterisk route - currently all fields to have a value but only 1 value might need edited?
-8. consider features that other software uses. look at research/literature. what is helpful in agile working?*/
+8. consider features that other software uses. look at research/literature. what is helpful in agile working?
+9. need to add in security features for data protection
+*/
