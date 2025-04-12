@@ -49,15 +49,16 @@ db.run(`
       likelihood INTEGER,
       impact INTEGER,
       risk_level TEXT,
-      assigned_to TEXT
+      assigned_to TEXT,
+      status TEXT
     )
   `);
 //forgot to add assigned to column - will comment this out after run once -- added in sql above anyway
 //db.run(`ALTER TABLE risks ADD COLUMN assigned_to TEXT`);
 
-/*-------ADDING RISK TO DB---------------------*/
+/*ADD RISK ROUTE */
 //route for newly added risk to db--when user visits browser, it will add risk to table
-//SHOULD CHANGE THIS TO POST------------------------------
+//SHOULD CHANGE THIS TO POST?------------------------------
 app.get('/addrisk', (req, res) => {
     // example data --- update later to take data from html, testing from url right now
     const title = req.query.title;
@@ -104,9 +105,33 @@ app.get('/addrisk', (req, res) => {
 //HOME PAGE ROUTE
 //when user clicks on html that is linked with /home this code will run
 app.get('/home', (req, res) => {
-  // get all risks from db
-  const sql = `SELECT * FROM risks`;
+  // get all risks from db, changed from const to let for sort/filter
+   // for sort/filter field
+  const sort = req.query.sort;
+  let sql = `SELECT * FROM risks`;
+  //logic for sort 
+  if (sort === 'score'){
+    sql += ` ORDER BY likelihood * impact DESC`;
+  } else if (sort === 'level'){
+    sql += `
+       ORDER BY CASE risk_level
+        WHEN 'Critical' THEN 1
+        WHEN 'High' THEN 2
+        WHEN 'Medium' THEN 3
+        WHEN 'Low' THEN 4
+      END`;
+  } else if (sort ==='title'){
+    sql += ' ORDER BY title ASC';
+  } else if (sort === 'assigned'){
+    sql += ` ORDER BY assigned_to ASC`;
+  }
 
+
+
+
+
+
+ 
   //for success message using express.session
   const message = req.session.message; 
   //only show message once then clear
@@ -151,7 +176,8 @@ app.get('/home', (req, res) => {
       } 
 
       html +=
-      `<!--navigation bar-->
+      `
+      <!--TOP NAVBAR-->
         <div class="nav-bar">
           <div class="row">
             <div class="risky col-2">
@@ -204,13 +230,26 @@ app.get('/home', (req, res) => {
             <!-- assigned to user input-->
               <div class="form-group">
                 <label for="assigned_to">Assign to:</label>
-                <input type="text" class="form-control" id ="assigned_to" name="assigned_to" placeholder="Enter user name">
+                <input type="text" class="form-control" id ="assigned_to" name="assigned_to" placeholder="Enter user name" required>
               </div>
               <!-- Submit button -->
               <button type="submit" class="btn btn-primary">Add Risk</button>
           </form>
           <div class="table">
             <h1>Risks Table</h1>
+            <!-- SORTING INPUT FIELD -->
+            <!--template literals/ternary operators change placeholder view of input field to match selected view
+            <!-- ie if selected option matches, show selected option-->
+            <form method="get" action="/home" class="mb-3">
+              <label for="sort" class="form-label">Sort by:</label>
+              <select name="sort" id="sort" class="form-select" onchange="this.form.submit()">
+                <option value="" ${sort === '' || !sort ? 'selected' : ''}>By ID (default)</option>
+                <option value="score" ${sort === 'score' ? 'selected' : ''}>Risk Score (High to Low)</option>
+                <option value="level" ${sort === 'level' ? 'selected' : ''}>Risk Level (Critical to Low)</option>
+                <option value="title" ${sort === 'title' ? 'selected' : ''}>Risk Title (A-Z)</option>
+                <option value="assigned" ${sort === 'assigned' ? 'selected' : ''}>Assigned User (A-Z)</option>
+              </select>
+            </form>
               <table class="risks table">
                 <thead>
                   <tr>
@@ -342,7 +381,7 @@ app.get('/editrisk', (req, res) => {
 });
 
 
-//runs when user submits Edit form
+//runs when user submits Edit form 
 app.get("/updaterisk", (req, res) => {
   //get values from form
   const id = req.query.id;
@@ -396,6 +435,7 @@ app.get("/updaterisk", (req, res) => {
 
 /*NEXT STEPS:
 2. update colours of success messages. not clear that they are different, need to set time on how long message lasts
+2.2 dont like placement of message. 
 3. colour code risks
 4. Sort risks table 
 5. change edit form so that it appears on the /home route instead of new page (optional)
