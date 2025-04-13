@@ -56,19 +56,20 @@ db.run(`
 //forgot to add columns - will comment this out after run once -- added in sql above anyway
 //db.run(`ALTER TABLE risks ADD COLUMN assigned_to TEXT`);
 //db.run(`ALTER TABLE risks ADD COLUMN status TEXT`);
+db.run(`ALTER TABLE risks RENAME COLUMN title TO name`);
 
 /*ADD RISK ROUTE */
 //route for newly added risk to db--when user visits browser, it will add risk to table
 //SHOULD CHANGE THIS TO POST?------------------------------
 app.get('/addrisk', (req, res) => {
     // example data --- update later to take data from html, testing from url right now
-    const title = req.query.title;
+    const name = req.query.name;
     const likelihood = req.query.likelihood; // scale of 1–5
     const impact = req.query.impact;     // scale of 1–5
     const assigned_to = req.query.assigned_to;
     const status = req.query.status;
     //check if all values are present
-    if (!title || !likelihood || !impact || !assigned_to || !status) {
+    if (!name || !likelihood || !impact || !assigned_to || !status) {
       return res.send('Please provide title, likelihood, impact, assigned user, and status.');
     }
 
@@ -87,8 +88,8 @@ app.get('/addrisk', (req, res) => {
 
     //insert into db
     db.run(
-        `INSERT INTO risks (title, likelihood, impact, risk_level, assigned_to, status) VALUES (?, ?, ?, ?, ?, ?)`,
-        [title, likelihood, impact, riskLevel, assigned_to, status],
+        `INSERT INTO risks (name, likelihood, impact, risk_level, assigned_to, status) VALUES (?, ?, ?, ?, ?, ?)`,
+        [name, likelihood, impact, riskLevel, assigned_to, status],
         /*this function runs after code is inserted - if error, then return (response.send) msg
         to browser. if not, risk added*/
         function(err) {
