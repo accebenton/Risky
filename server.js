@@ -45,7 +45,7 @@ app.listen(port, () => {
 db.run(`
     CREATE TABLE IF NOT EXISTS risks (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT NOT NULL,
+      name TEXT NOT NULL,
       likelihood INTEGER,
       impact INTEGER,
       risk_level TEXT,
@@ -53,10 +53,11 @@ db.run(`
       status TEXT
     )
   `);
-//forgot to add columns - will comment this out after run once -- added in sql above anyway
+
+//adding/amending columns- will comment this out after run once -- added in sql above anyway
 //db.run(`ALTER TABLE risks ADD COLUMN assigned_to TEXT`);
 //db.run(`ALTER TABLE risks ADD COLUMN status TEXT`);
-db.run(`ALTER TABLE risks RENAME COLUMN title TO name`);
+//db.run(`ALTER TABLE risks RENAME COLUMN name TO name`);
 
 /*ADD RISK ROUTE */
 //route for newly added risk to db--when user visits browser, it will add risk to table
@@ -70,7 +71,7 @@ app.get('/addrisk', (req, res) => {
     const status = req.query.status;
     //check if all values are present
     if (!name || !likelihood || !impact || !assigned_to || !status) {
-      return res.send('Please provide title, likelihood, impact, assigned user, and status.');
+      return res.send('Please provide name, likelihood, impact, assigned user, and status.');
     }
 
     //calculate risk from OWASP matrix
@@ -123,8 +124,8 @@ app.get('/home', (req, res) => {
         WHEN 'Medium' THEN 3
         WHEN 'Low' THEN 4
       END`;
-  } else if (sort ==='title'){
-    sql += ' ORDER BY title ASC';
+  } else if (sort ==='name'){
+    sql += ' ORDER BY name ASC';
   } else if (sort === 'assigned'){
     sql += ` ORDER BY assigned_to ASC`;
   }
@@ -169,7 +170,7 @@ app.get('/home', (req, res) => {
             integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" 
             crossorigin="anonymous">
         </script>
-        <title>Risk Management Tool</title>
+        <name>Risk Management Tool</name>
       </head>
       <body>`
 
@@ -217,8 +218,8 @@ app.get('/home', (req, res) => {
           <form action="/addrisk" method="get">
             <!--risk name input field-->
             <div class="form-group">
-              <label for="title">Risk Name:</label>
-              <input type="text" class="form-control" id="title" name="title" required>
+              <label for="name">Risk Name:</label>
+              <input type="text" class="form-control" id="name" name="name" required>
             </div>
             <!--risk likelihood input-->
             <div class="form-group">
@@ -259,7 +260,7 @@ app.get('/home', (req, res) => {
                 <option value="" ${sort === '' || !sort ? 'selected' : ''}>By ID (default)</option>
                 <option value="score" ${sort === 'score' ? 'selected' : ''}>Risk Score (High to Low)</option>
                 <option value="level" ${sort === 'level' ? 'selected' : ''}>Risk Level (Critical to Low)</option>
-                <option value="title" ${sort === 'title' ? 'selected' : ''}>Risk Title (A-Z)</option>
+                <option value="name" ${sort === 'name' ? 'selected' : ''}>Risk name (A-Z)</option>
                 <option value="assigned" ${sort === 'assigned' ? 'selected' : ''}>Assigned User (A-Z)</option>
               </select>
             </form>
@@ -284,7 +285,7 @@ app.get('/home', (req, res) => {
       html += `
         <tr>
           <td>${risk.id}</td>
-          <td>${risk.title}</td>
+          <td>${risk.name}</td>
           <td>${risk.likelihood}</td>
           <td>${risk.impact}</td>
           <td>${risk.status}</td>
@@ -364,7 +365,7 @@ app.get('/editrisk', (req, res) => {
       <!DOCTYPE html>
       <html>
       <head>
-        <title>Edit Risk</title>
+        <name>Edit Risk</name>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
       </head>
       <!--EDIT RISK TABLE-->
@@ -375,7 +376,7 @@ app.get('/editrisk', (req, res) => {
           <input type="hidden" name="id" value="${risk.id}">
           <div class="form-group">
             <label>Risk Name</label>
-            <input type="text" name="title" class="form-control" value="${risk.title}" >
+            <input type="text" name="name" class="form-control" value="${risk.name}" >
           </div>
           <div class="form-group">
             <label>Likelihood (1-5):</label>
@@ -415,13 +416,13 @@ app.get('/editrisk', (req, res) => {
 app.get("/updaterisk", (req, res) => {
   //get values from form
   const id = req.query.id;
-  const title = req.query.title;
+  const name = req.query.name;
   //converts string to number value
   const likelihood = Number(req.query.likelihood);
   const impact = Number(req.query.impact);
 
   //checks if fields all have inputs, but maybe should change this since all fields might not need changed?
-   if (!id || !title || !likelihood || !impact) {
+   if (!id || !name || !likelihood || !impact) {
     return res.send('input fields missing values');
   }
 
@@ -440,12 +441,12 @@ app.get("/updaterisk", (req, res) => {
   //update correct row in db with new values from form
   const sql = `
     UPDATE risks
-    SET title = ?, likelihood = ?, impact = ?, risk_level = ?
+    SET name = ?, likelihood = ?, impact = ?, risk_level = ?
     WHERE id = ?
     `;
 
   //run sql command above with values
-  db.run(sql, [title, likelihood, impact, riskLevel, id], function(err){
+  db.run(sql, [name, likelihood, impact, riskLevel, id], function(err){
     //error message 
     if (err){
       return res.send("Can't update risk");
@@ -462,15 +463,18 @@ app.get("/updaterisk", (req, res) => {
 
 
 
-
-/*NEXT STEPS:
+/*TO START NEXT TIME:
+1. add filter/search button in
+/*FUTURE STEPS:
 2. update colours of success messages. not clear that they are different, need to set time on how long message lasts
   2.2 dont like placement of message. 
-3. colour code risks
+3. colour code risks - red for critical, green for open
 5. change edit form so that it appears on the /home route instead of new page (optional)
-6. change risk.title in table to risk.name so fields are consistently named
 7. Change /updaterisk route - currently all fields to have a value but only 1 value might need edited?
 8. consider features that other software uses. look at research/literature. what is helpful in agile working?
 9. need to add in security features for data protection
 10. separate edit html/homepage html file or keep in 1 file
+11. chart.js for visualisation(optional)
+12. login system for security - only admins can delete?
+13. add GDPR notice in
 */
