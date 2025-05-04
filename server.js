@@ -264,6 +264,7 @@ app.get('/home', (req, res) => {
                 <option value="assigned" ${sort === 'assigned' ? 'selected' : ''}>Assigned User (A-Z)</option>
               </select>
             </form>
+            <form method="get" action ="/home" class="row g-2 mb-3">
               <table class="risks table">
                 <thead>
                   <tr>
@@ -473,7 +474,7 @@ app.get("/updaterisk", (req, res) => {
 7. Change /updaterisk route - currently all fields to have a value but only 1 value might need edited?
 8. consider features that other software uses. look at research/literature. what is helpful in agile working?
 9. need to add in security features for data protection
-10. separate edit html/homepage html file or keep in 1 file
+10. separate edit html/homepage html file or keep in 1 file -- DO THIS NEXT, GETTING MESSY
 11. chart.js for visualisation(optional)
 12. login system for security - only admins can delete?
 13. add GDPR notice in
