@@ -7,22 +7,22 @@ const db = require('../db');
 
 /*ADD RISK ROUTE */
 //route for newly added risk to db--when user visits browser, it will add risk to table
-//SHOULD CHANGE THIS TO POST?------------------------------
-router.get('/addrisk', (req, res) => {
-    // example data --- update later to take data from html, testing from url right now
-    const name = req.query.name;
-    const likelihood = req.query.likelihood; // scale of 1–5
-    const impact = req.query.impact;     // scale of 1–5
-    const assigned_to = req.query.assigned_to;
-    const riskStatus = req.query.riskStatus;
+router.post('/addrisk', (req, res) => {
+
+    // takes from req.body (because its POST not GET)
+    const name = req.body.name;
+    const likelihood = req.body.likelihood; // scale of 1–5
+    const impact = req.body.impact;     // scale of 1–5
+    const assigned_to = req.body.assigned_to;
+    const risk_status = req.body.risk_status;
+
     //check if all values are present
-    if (!name || !likelihood || !impact || !assigned_to || !riskStatus) {
+    if (!name || !likelihood || !impact || !assigned_to || !risk_status) {
       return res.send('Please provide name, likelihood, impact, assigned user, and status.');
     }
 
     //calculate risk from OWASP matrix
     const riskScore = likelihood * impact;
-
     let riskLevel = 'Low';
 
     if (riskScore >= 6 && riskScore <= 10) {
@@ -35,8 +35,8 @@ router.get('/addrisk', (req, res) => {
 
     //insert into db
     db.run(
-        `INSERT INTO risks (name, likelihood, impact, risk_level, assigned_to, riskStatus) VALUES (?, ?, ?, ?, ?, ?)`,
-        [name, likelihood, impact, riskLevel, assigned_to, riskStatus],
+        `INSERT INTO risks (name, likelihood, impact, risk_level, assigned_to, risk_status) VALUES (?, ?, ?, ?, ?, ?)`,
+        [name, likelihood, impact, riskLevel, assigned_to, risk_status],
         /*this function runs after code is inserted - if error, then return (response.send) msg
         to browser. if not, risk added*/
         function(err) {
@@ -75,6 +75,7 @@ router.get('/deleterisk', (req, res) => {
 
 
 //EDIT RISK ROUTE
+//this stays at get because the edit risk route is navigated to in browser to show form
 router.get('/editrisk', (req, res) => {
     // edit a risk that is already logged to table
     const id = req.query.id;
@@ -106,7 +107,7 @@ router.get('/editrisk', (req, res) => {
         <body class="container mt-5">
           <h1>Edit Risk</h1>
           <!--send form to /updaterisk when press submit-->
-          <form action="/updaterisk" method="get">
+          <form action="/updaterisk" method="POST">
             <input type="hidden" name="id" value="${risk.id}">
             <div class="form-group">
               <label>Risk Name</label>
@@ -147,22 +148,28 @@ router.get('/editrisk', (req, res) => {
   
 //UPDATE RISK ROUTE
 //runs when user submits Edit form 
-router.get("/updaterisk", (req, res) => {
+router.post("/updaterisk", (req, res) => {
     //get values from form
-    const id = req.query.id;
-    const name = req.query.name;
+    const id = req.body.id;
+    const name = req.body.name;
     //converts string to number value
-    const likelihood = Number(req.query.likelihood);
-    const impact = Number(req.query.impact);
+    const likelihood = Number(req.body.likelihood);
+    const impact = Number(req.body.impact);
+    const assigned_to = req.body.assigned_to;
+    const risk_status = req.body.status;
+
+    // test because not sure whats causing error message
+    //console.log('UPDATE RISK › req.body =', req.body);
+
   
     //checks if fields all have inputs, but maybe should change this since all fields might not need changed?
-     if (!id || !name || !likelihood || !impact) {
+     if (!id || !name || !likelihood || !impact || !assigned_to || !risk_status) {
       return res.send('input fields missing values');
     }
   
     //calculate risk score and risk level
     const riskScore = likelihood * impact;
-    let riskLevel = 'Low';  // Default value
+    let riskLevel = 'Low';  
   
     if (riskScore >= 6 && riskScore <= 10) {
       riskLevel = 'Medium';
@@ -175,16 +182,17 @@ router.get("/updaterisk", (req, res) => {
     //update correct row in db with new values from form
     const sql = `
       UPDATE risks
-      SET name = ?, likelihood = ?, impact = ?, risk_level = ?, assigned_to = ?, riskStatus = ?;
+      SET name = ?, likelihood = ?, impact = ?, risk_level = ?, assigned_to = ?, risk_status = ?
       WHERE id = ?
       `;
   
     //run sql command above with values
-    db.run(sql, [name, likelihood, impact, riskLevel, assigned_to, riskStatus, id], function(err){
+    db.run(sql, [name, likelihood, impact, riskLevel, assigned_to, risk_status, id], function(err){
       //error message 
       if (err){
         return res.send("Can't update risk");
       }
+      
       req.session.message = 'Risk updated';
       //send user back to home page
       res.redirect('/home');

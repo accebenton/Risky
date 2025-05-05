@@ -1,18 +1,17 @@
 // require in modules from node.js
 const express = require('express');
+//for session library
+const session = require('express-session');
 // connect to sqlite via "db" which is variable created in db.js
 const db = require('./db');
-
 // define the other route files so they can be pulled in
 const homeRoutes = require('./routes/homeRoutes');
 const riskRoutes = require('./routes/riskRoutes');
-
-
 //express function to create web app
 const app = express();
-//for session library
-const session = require('express-session');
-
+// this is for POST requests so the form fields can be read
+//express will parse urlencoded data into req.body
+app.use(express.urlencoded({ extended: true }));
 // for using express.session library
 // secret = internal encrypt session data 
 // resave = doesn't save if nothings changed
@@ -22,6 +21,11 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
+
+// POST /addrisk will be done in riskRoutes file
+app.use('/', homeRoutes);
+app.use('/', riskRoutes);
+
 
 //tell express to use public folder cont html and css
 app.use(express.static('public'));
@@ -34,10 +38,6 @@ app.get('/', (req, res) => {
     res.send('tick! first step complete');
   });
 */
-//tells express to use the other files in project folder
-app.use('/', homeRoutes);
-app.use('/', riskRoutes);
-
 
 //starts server so can go to browser - port 3000 common for local servers
 app.listen(port, () => {
@@ -56,7 +56,7 @@ db.run(`
       impact INTEGER,
       risk_level TEXT,
       assigned_to TEXT,
-      riskStatus TEXT
+      risk_status TEXT
     )
   `);
 

@@ -105,7 +105,7 @@ router.get('/home', (req, res) => {
           <div class="row add-risk">
             <h1>add risk here</h1>
             <!--send data using GET method to backend-->
-            <form action="/addrisk" method="get">
+            <form action="/addrisk" method="POST">
               <!--risk name input field-->
               <div class="form-group">
                 <label for="name">Risk Name:</label>
@@ -124,7 +124,7 @@ router.get('/home', (req, res) => {
               <!-- risk status input-->
               <div class="form-group">
                 <label for="status">Status:</label>
-                <select class="form-control" id="status" name="status" required>
+                <select class="form-control" id="status" name="risk_status" required>
                   <!-- selected open as default, so all new risks have open status-->
                   <option value="Open" selected>Open</option>
                   <option value="In Progress">In Progress</option>
@@ -160,6 +160,7 @@ router.get('/home', (req, res) => {
                     <tr>
                       <th>ID</th>
                       <th>Risk Name</th>
+                      <th>Date Created</th>
                       <th>Likelihood</th>
                       <th>Impact</th>
                       <th>Status</th>
@@ -167,10 +168,12 @@ router.get('/home', (req, res) => {
                       <th>Assigned To</th>
                     </tr>
                   </thead>
-                  <!--tbody is where the info is pulled to from the backend-->
+                  <!--tbody is where the info is pulled into from the backend-->
                   <tbody>`;
   
-      //loop through each risk from db and add row to html table
+      //loop through each risk from db and add row to ht
+      // 
+      // ml table
       for (let i=0; i <rows.length; i++){
         const risk = rows[i];
         html += `
@@ -179,7 +182,7 @@ router.get('/home', (req, res) => {
             <td>${risk.name}</td>
             <td>${risk.likelihood}</td>
             <td>${risk.impact}</td>
-            <td>${risk.riskStatus}</td>
+            <td>${risk.risk_status}</td>
             <td>${risk.risk_level}</td>
             <td>${risk.assigned_to}</td>
             <!-- delete and edit buttons -->
