@@ -9,7 +9,21 @@ router.get('/home', (req, res) => {
     // get all risks from db, changed from const to let for sort/filter
      // for sort/filter field
     const sort = req.query.sort;
-    let sql = `SELECT * FROM risks`;
+    let sql = 
+      `SELECT 
+        risks.id,
+        risks.name,
+        risks.dateCreated,
+        risks.likelihood,
+        risks.impact,
+        risks.risk_level,
+        risks.risk_status,
+        users.name AS assigned_to_name
+      FROM risks
+      LEFT JOIN users ON risks.assigned_to = users.id
+      `;
+
+      
     //logic for sort 
     if (sort === 'score'){
       sql += ` ORDER BY likelihood * impact DESC`;
@@ -36,7 +50,10 @@ router.get('/home', (req, res) => {
       if(err){
         return res.send('There was an error');
       }
-      
+      //get users from users table for drop down in for
+      db.all('SELECT id, name FROM users', [], function(err2, users) {
+        if (err2) return res.send('Error loading users');
+
       //test, shows in-browser my rows, backend connecting to front end
       //res.send(rows);
   
@@ -134,7 +151,10 @@ router.get('/home', (req, res) => {
               <!-- assigned to user input-->
                 <div class="form-group">
                   <label for="assigned_to">Assign to:</label>
-                  <input type="text" class="form-control" id ="assigned_to" name="assigned_to" placeholder="Enter user name" required>
+                  <!--insert drop down menu for users to choose another user rather than free type-->
+                  <select class="form-control" id="assigned_to" name="assigned_to" required>
+                    ${users.map(user => `<option value="${user.id}">${user.name}</option>`).join('')}
+                  </select>
                 </div>
                 <!-- Submit button -->
                 <button type="submit" class="btn btn-primary">Add Risk</button>
@@ -180,11 +200,12 @@ router.get('/home', (req, res) => {
           <tr>
             <td>${risk.id}</td>
             <td>${risk.name}</td>
+            <td>${risk.dateCreated}</td>
             <td>${risk.likelihood}</td>
             <td>${risk.impact}</td>
             <td>${risk.risk_status}</td>
             <td>${risk.risk_level}</td>
-            <td>${risk.assigned_to}</td>
+            <td>${risk.assigned_to_name}</td>
             <!-- delete and edit buttons -->
             <td>
               <a href="/deleterisk?id=${risk.id}" 
@@ -209,7 +230,7 @@ router.get('/home', (req, res) => {
         //sends page to browser
         res.send(html);
 
+      });
     });
 });
-
 module.exports = router;

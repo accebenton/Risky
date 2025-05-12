@@ -3,14 +3,29 @@ const express = require('express');
 const router = express.Router(); //
 const db = require('../db');
 
+//function for formatting timestamp
+function getFormattedDate() {
+  const now = new Date();
 
+  const day = String(now.getDate()).padStart(2, '0');
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const year = String(now.getFullYear()).slice(2);
 
+  let hours = now.getHours();
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+
+  return `${day}/${month}/${year}, ${hours}:${minutes}${ampm}`;
+}
 /*ADD RISK ROUTE */
 //route for newly added risk to db--when user visits browser, it will add risk to table
 router.post('/addrisk', (req, res) => {
 
     // takes from req.body (because its POST not GET)
     const name = req.body.name;
+    const dateCreated = getFormattedDate();
     const likelihood = req.body.likelihood; // scale of 1–5
     const impact = req.body.impact;     // scale of 1–5
     const assigned_to = req.body.assigned_to;
@@ -35,12 +50,14 @@ router.post('/addrisk', (req, res) => {
 
     //insert into db
     db.run(
-        `INSERT INTO risks (name, likelihood, impact, risk_level, assigned_to, risk_status) VALUES (?, ?, ?, ?, ?, ?)`,
-        [name, likelihood, impact, riskLevel, assigned_to, risk_status],
+        `INSERT INTO risks (name, dateCreated, likelihood, impact, risk_level, assigned_to, risk_status) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [name, dateCreated, likelihood, impact, riskLevel, assigned_to, risk_status],
         /*this function runs after code is inserted - if error, then return (response.send) msg
         to browser. if not, risk added*/
         function(err) {
             if (err) {
+              //debugging on server side 
+              // console.error('ERROR:', err.message);
               return res.send('Something went wrong.');
             }
             req.session.message = 'Risk added';
