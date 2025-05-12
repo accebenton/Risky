@@ -1,14 +1,14 @@
 -- think i need to look at the status field, somethings not right but not entirely sure?
 BACKEND TASKS
 ----Definitely Add-----
-2. Add filter/search button
-4. Add description field into risk table so that more details can be seen at a glance -- OR NEW ROUTE WHEN CLICKED ON A RISK FOR MORE INFO? add updated timestamp in here
-
+1. mitigation field - users suggest solution
+2. user assign the risk to a sprint ie sprint 2
+3. Kanban view of risks
 ----would be good to add but not essential-----
 1. colour code risks in table - red for critical, green for open etc
 2. update colours of success messages. not clear that they are different, need to set time on how long message lasts
    -- dont like placement of message
-2. Kanban view of risks
+
 3. Change /updaterisk route - currently all fields to have a value but only 1 value might need edited?
 4. dont require all fields to be re-entered when only one changes - user might only want to edit 1 field
 5. Inline edit form on /home (modal or inline row)
@@ -23,7 +23,8 @@ BACKEND TASKS
 
 FRONT END TASKS
 1. build a front end after back end core functions are working -- updated to do list at later date
+   1. change LOW MEDIUM and CRITICAL to be coloured green orange and red
+   2. update the view risk and edit risk routes to be better presented
 
 
 
- small features to pre-populate the tool with common risk examples

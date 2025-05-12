@@ -118,78 +118,38 @@ router.get('/home', (req, res) => {
                 </div>
               </div>
           </div>
-          <!--adding a risk-->
-          <div class="row add-risk">
-            <h1>add risk here</h1>
-            <!--send data using GET method to backend-->
-            <form action="/addrisk" method="POST">
-              <!--risk name input field-->
-              <div class="form-group">
-                <label for="name">Risk Name:</label>
-                <input type="text" class="form-control" id="name" name="name" required>
-              </div>
-              <!--risk likelihood input-->
-              <div class="form-group">
-                <label for="likelihood">Likelihood (1-5):</label>
-                <input type="number" class="form-control" id="likelihood" name="likelihood" min="1" max="5" required>
-              </div>
-              <!--risk impact input-->
-                <div class="form-group">
-                  <label for="impact">Impact (1-5):</label>
-                  <input type="number" class="form-control" id="impact" name="impact" min="1" max="5" required>
-                </div>
-              <!-- risk status input-->
-              <div class="form-group">
-                <label for="status">Status:</label>
-                <select class="form-control" id="status" name="risk_status" required>
-                  <!-- selected open as default, so all new risks have open status-->
-                  <option value="Open" selected>Open</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="Closed">Closed</option>
-                </select>
-              </div>
-              <!-- assigned to user input-->
-                <div class="form-group">
-                  <label for="assigned_to">Assign to:</label>
-                  <!--insert drop down menu for users to choose another user rather than free type-->
-                  <select class="form-control" id="assigned_to" name="assigned_to" required>
-                    ${users.map(user => `<option value="${user.id}">${user.name}</option>`).join('')}
-                  </select>
-                </div>
-                <!-- Submit button -->
-                <button type="submit" class="btn btn-primary">Add Risk</button>
+          <a href="/add-risk" class="btn btn-primary mb-3">+ Add New Risk</a>     
+          <div class="table">
+            <h1>Risks Table</h1>
+            <!-- SORTING INPUT FIELD -->
+            <!--template literals/ternary operators change placeholder view of input field to match selected view-->
+            <!-- ie if selected option matches, show selected option-->
+            <form method="get" action="/home" class="mb-3">
+              <label for="sort" class="form-label">Sort by:</label>
+              <select name="sort" id="sort" class="form-select" onchange="this.form.submit()">
+                <option value="" ${sort === '' || !sort ? 'selected' : ''}>By ID (default)</option>
+                <option value="score" ${sort === 'score' ? 'selected' : ''}>Risk Score (High to Low)</option>
+                <option value="level" ${sort === 'level' ? 'selected' : ''}>Risk Level (Critical to Low)</option>
+                <option value="name" ${sort === 'name' ? 'selected' : ''}>Risk name (A-Z)</option>
+                <option value="assigned" ${sort === 'assigned' ? 'selected' : ''}>Assigned User (A-Z)</option>
+              </select>
             </form>
-            <div class="table">
-              <h1>Risks Table</h1>
-              <!-- SORTING INPUT FIELD -->
-              <!--template literals/ternary operators change placeholder view of input field to match selected view-->
-              <!-- ie if selected option matches, show selected option-->
-              <form method="get" action="/home" class="mb-3">
-                <label for="sort" class="form-label">Sort by:</label>
-                <select name="sort" id="sort" class="form-select" onchange="this.form.submit()">
-                  <option value="" ${sort === '' || !sort ? 'selected' : ''}>By ID (default)</option>
-                  <option value="score" ${sort === 'score' ? 'selected' : ''}>Risk Score (High to Low)</option>
-                  <option value="level" ${sort === 'level' ? 'selected' : ''}>Risk Level (Critical to Low)</option>
-                  <option value="name" ${sort === 'name' ? 'selected' : ''}>Risk name (A-Z)</option>
-                  <option value="assigned" ${sort === 'assigned' ? 'selected' : ''}>Assigned User (A-Z)</option>
-                </select>
-              </form>
-              <form method="get" action ="/home" class="row g-2 mb-3">
-                <table class="risks table">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Risk Name</th>
-                      <th>Date Created</th>
-                      <th>Likelihood</th>
-                      <th>Impact</th>
-                      <th>Status</th>
-                      <th>Risk Level</th>
-                      <th>Assigned To</th>
-                    </tr>
-                  </thead>
-                  <!--tbody is where the info is pulled into from the backend-->
-                  <tbody>`;
+            <form method="get" action ="/home" class="row g-2 mb-3">
+              <table class="risks table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Risk Name</th>
+                    <th>Date Created</th>
+                    <th>Likelihood</th>
+                    <th>Impact</th>
+                    <th>Status</th>
+                    <th>Risk Level</th>
+                    <th>Assigned To</th>
+                  </tr>
+                </thead>
+                <!--tbody is where the info is pulled into from the backend-->
+                <tbody>`;
   
       //loop through each risk from db and add row to ht
       // 
@@ -198,7 +158,7 @@ router.get('/home', (req, res) => {
         const risk = rows[i];
         html += `
           <tr>
-            <td>${risk.id}</td>
+            <td><a href="/viewrisk?id=${risk.id}">${risk.id}</a></td>
             <td>${risk.name}</td>
             <td>${risk.dateCreated}</td>
             <td>${risk.likelihood}</td>

@@ -51,13 +51,16 @@ app.listen(port, () => {
 db.run(`
     CREATE TABLE IF NOT EXISTS risks (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
+      name TEXT,
+      dateCreated TEXT,
       likelihood INTEGER,
       impact INTEGER,
+      risk_status TEXT,
       risk_level TEXT,
-      assigned_to TEXT,
-      risk_status TEXT
-    )
+      assigned_to INTEGER,
+      description TEXT,
+      last_updated TEXT
+    );
   `);
 
 //adding/amending columns- will comment this out after run once -- added in sql above anyway
