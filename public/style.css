@@ -1,7 +1,4 @@
-body {
-    background-color: grey;
-    color: beige;
-}
+
 /*navigation bar*/
 .nav-bar {
     border: 2px solid black;
@@ -32,3 +29,27 @@ body {
 .add-risk{
     border:2px solid black;
 }
+
+/*risk status and severity(level) icon colours*/
+.status-colour,
+.level-colour {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85em;
+  font-weight: bold;
+  display: inline-block;
+  min-width: 80px;
+  text-align: center;
+}
+
+/* status backgrounds*/
+.bg-open        { background-color: #0d6efd; color: white; }
+.bg-inprogress  { background-color: #e0a800; color: white; }
+.bg-closed      { background-color: #6c757d; color: white; }
+
+/*risk level backgrounds */
+.bg-critical    { background-color: #dc3545; color: white; }
+.bg-high        { background-color: #fd7e14; color: white; }
+.bg-medium      { background-color: #198754; color: white; }
+.bg-low         { background-color: #1bbd89; color: white; }
+

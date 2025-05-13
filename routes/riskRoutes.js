@@ -22,7 +22,8 @@ function getFormattedDate() {
 /*ADD RISK ROUTE */
 //post route for submitting form
 router.post('/addrisk', (req, res) => {
-
+  //debug server side  
+  //console.log('/addrisk called');
     // takes from req.body (because its POST not GET)
     const name = req.body.name;
     const dateCreated = getFormattedDate();
@@ -31,6 +32,7 @@ router.post('/addrisk', (req, res) => {
     const description = req.body.description || null;
     const assigned_to = req.body.assigned_to;
     const risk_status = req.body.risk_status;
+    const mitigation = req.body.mitigation || null;
 
     //check if all values are present
     if (!name || !likelihood || !impact || !assigned_to || !risk_status) {
@@ -51,15 +53,15 @@ router.post('/addrisk', (req, res) => {
 
     //insert into db
     db.run(
-        `INSERT INTO risks (name, dateCreated, likelihood, impact, risk_status, risk_level, assigned_to, description, last_updated) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [name, dateCreated, likelihood, impact, risk_status, risk_level, assigned_to, description, null],
+        `INSERT INTO risks (name, dateCreated, likelihood, impact, risk_status, risk_level, assigned_to, description, mitigation, last_updated) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [name, dateCreated, likelihood, impact, risk_status, risk_level, assigned_to, description, mitigation, null],
         /*this function runs after code is inserted - if error, then return (response.send) msg
         to browser. if not, risk added*/
         function(err) {
             if (err) {
               //debugging on server side 
-              // console.error('ERROR:', err.message);
+              //console.error('ERROR:', err.message);
               return res.send('Something went wrong.');
             }
             req.session.message = 'Risk added';
@@ -119,6 +121,10 @@ router.get('/add-risk', (req, res) => {
               <select class="form-control" id="assigned_to" name="assigned_to" required>
                 ${users.map(user => `<option value="${user.id}">${user.name}</option>`).join('')}
               </select>
+              <div class="form-group">
+                <label for="mitigation">Mitigation (optional):</label>
+                <textarea class="form-control" id="mitigation" name="mitigation" rows="3" placeholder="e.g. Require API tokens, validate inputs, use HTTPS..."></textarea>
+              </div>
             </div>
             <!-- Submit button -->
             <button type="submit" class="btn btn-primary">Add Risk</button>
@@ -322,7 +328,7 @@ router.get('/viewrisk', (req, res) => {
         <p><strong>Impact:</strong> ${risk.impact}</p>
         <p><strong>Risk Level:</strong> ${risk.risk_level}</p>
         <p><strong>Description:</strong> ${risk.description || 'No description provided'}</p>
-
+        <p><strong>Suggested Mitigation:</strong> ${risk.mitigation || 'No suggestion provided.'}</p>
         <a href="/home" class="btn btn-secondary mt-3">Back to Home</a>
       </body>
       </html>

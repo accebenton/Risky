@@ -3,6 +3,26 @@ const express = require('express');
 const router = express.Router(); //
 const db = require('../db');
 
+
+function getStatusColour(status) {
+  switch (status) {
+    case 'Open': return 'open';
+    case 'In Progress': return 'inprogress';
+    case 'Closed': return 'closed';
+    default: return 'default';
+  }
+}
+
+function getLevelColour(level) {
+  switch (level) {
+    case 'Critical': return 'critical';
+    case 'High': return 'high';
+    case 'Medium': return 'medium';
+    case 'Low': return 'low';
+    default: return 'default';
+  }
+}
+
 //HOME PAGE ROUTE
 //when user clicks on html that is linked with /home this code will run
 router.get('/home', (req, res) => {
@@ -88,8 +108,9 @@ router.get('/home', (req, res) => {
   
         html +=
         `
+        <div class="container my-2">
         <!--TOP NAVBAR-->
-          <div class="nav-bar">
+          <nav class="navbar d-flex justify-content-between align-items-center px-4 py-2 shadow-sm" style="background-color: #4a90e2;">
             <div class="row">
               <div class="risky col-2">
                 <h1>Risky</h1>
@@ -117,35 +138,34 @@ router.get('/home', (req, res) => {
                   </div>
                 </div>
               </div>
-          </div>
-          <a href="/add-risk" class="btn btn-primary mb-3">+ Add New Risk</a>     
+          </nav>
+          <a href="/add-risk" class="btn btn-primary mb-3">+ Add New Risk</a>
+          <a href="/kanban" class="btn btn-outline-primary mb-3">Kanban View</a>     
           <div class="table">
             <h1>Risks Table</h1>
             <!-- SORTING INPUT FIELD -->
             <!--template literals/ternary operators change placeholder view of input field to match selected view-->
             <!-- ie if selected option matches, show selected option-->
-            <form method="get" action="/home" class="mb-3">
+            <form method="get" action="/home" class="mb-4">
               <label for="sort" class="form-label">Sort by:</label>
               <select name="sort" id="sort" class="form-select" onchange="this.form.submit()">
                 <option value="" ${sort === '' || !sort ? 'selected' : ''}>By ID (default)</option>
-                <option value="score" ${sort === 'score' ? 'selected' : ''}>Risk Score (High to Low)</option>
                 <option value="level" ${sort === 'level' ? 'selected' : ''}>Risk Level (Critical to Low)</option>
                 <option value="name" ${sort === 'name' ? 'selected' : ''}>Risk name (A-Z)</option>
                 <option value="assigned" ${sort === 'assigned' ? 'selected' : ''}>Assigned User (A-Z)</option>
               </select>
             </form>
             <form method="get" action ="/home" class="row g-2 mb-3">
-              <table class="risks table">
-                <thead>
+              <table class="table table-bordered table-hover">
+                <thead class="table-light">
                   <tr>
                     <th>ID</th>
                     <th>Risk Name</th>
                     <th>Date Created</th>
-                    <th>Likelihood</th>
-                    <th>Impact</th>
                     <th>Status</th>
                     <th>Risk Level</th>
                     <th>Assigned To</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <!--tbody is where the info is pulled into from the backend-->
@@ -161,10 +181,8 @@ router.get('/home', (req, res) => {
             <td><a href="/viewrisk?id=${risk.id}">${risk.id}</a></td>
             <td>${risk.name}</td>
             <td>${risk.dateCreated}</td>
-            <td>${risk.likelihood}</td>
-            <td>${risk.impact}</td>
-            <td>${risk.risk_status}</td>
-            <td>${risk.risk_level}</td>
+            <td><span class="status-colour bg-${getStatusColour(risk.risk_status)}">${risk.risk_status}</span></td>
+            <td><span class="level-colour bg-${getLevelColour(risk.risk_level)}">${risk.risk_level}</span></td>
             <td>${risk.assigned_to_name}</td>
             <!-- delete and edit buttons -->
             <td>
@@ -178,10 +196,11 @@ router.get('/home', (req, res) => {
       }
   
       html += ` 
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
+            </div>          
           </body>
         </html>
         `;
