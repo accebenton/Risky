@@ -20,21 +20,31 @@
         <body>
         <div class="container my-2">
         <!--TOP NAVBAR-->
-          <nav class="navbar d-flex justify-content-between align-items-center px-4 py-2 shadow-sm" style="background-color: #4a90e2;">
-            <div class="row">
-              <div class="risky col-2">
-                <h1>Risky</h1>
-              </div>
-              <!-- search bar-->
-                <form class="d-flex align-items-center" action="/search" method="get" style="width: 40%;">
-                  <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                  <button class="btn btn-dark" type="submit">Search</button>
+          <nav class="navbar px-4 py-2 px-4 py-2 shadow-sm">
+            <div class="container-fluid d-flex align-items-center justify-content-between">
+                <!--profile icon-->
+                <div>
+                    <a href="/profile">
+                        <img src="/public/user-icon.png" alt="Profile" width="36" height="36" class="rounded-circle">
+                    </a>
+                </div>
+                <!-- search bar-->
+                
+                <form class="d-flex search-bar" role="search" method="get" action="/search">
+                    <div class="input-group">
+                        <input type="search" name="q" class="form-control" placeholder="Search..." aria-label="Search">
+                        <button class="btn btn-outline-secondary" type="submit">Search</button>
+                    </div>
                 </form>
+                <!--+ add risk button-->
+                <div class="d-flex align-items-center gap-3">
+                    <a href="/add-risk" class="plus-button btn btn-danger rounded-circle d-flex justify-content-center align-items-center">+</a>
+                    <h3 class="text-white fw-bold fs-4">Risky</h3>
+                </div>
                 <div class="col-4">
                   <div class="menu">
                     <ul class="nav">
                       <li class="nav-item">
-                        <a class="nav-link" href="profile.html">Profile</a>
                       </li>
                       <li class="nav-item">
                         <a class="nav-link" href="#">Settings</a>

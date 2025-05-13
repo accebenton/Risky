@@ -1,33 +1,14 @@
-
-/*navigation bar*/
-.nav-bar {
-    border: 2px solid black;
+nav {
+    background-color: #4a90e2;
 }
 
-/*logo/brand name*/
-
-.risky{
-    text-align: center;
-    padding: 20px;
-    font-size: 20px;
-}
-
-
-/*search bar*/
 .search-bar{
-    border: 2px solid black;
-    padding: 10px;
+    width:40%;
 }
-
-.search-bar form{
-    width: 50%;
-}
-
-
-
-/*add risk*/
-.add-risk{
-    border:2px solid black;
+.plus-button{
+    width: 36px; 
+    height: 36px; 
+    font-size: 20px;
 }
 
 /*risk status and severity(level) icon colours*/

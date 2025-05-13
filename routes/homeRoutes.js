@@ -83,13 +83,13 @@ router.get('/home', (req, res) => {
       <html lang="en">
         <head>
           <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8" />
-          <link rel="stylesheet" href="style.css" />
+          
           <!-- bootstrap css-->
           <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" 
               rel="stylesheet" 
               integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" 
               crossorigin="anonymous">
-          
+          <link rel="stylesheet" href="style.css" />
           <!-- jQuery, Popper.js, and Bootstrap JS -->
           <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
           <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
@@ -110,34 +110,39 @@ router.get('/home', (req, res) => {
         `
         <div class="container my-2">
         <!--TOP NAVBAR-->
-          <nav class="navbar d-flex justify-content-between align-items-center px-4 py-2 shadow-sm" style="background-color: #4a90e2;">
-            <div class="row">
-              <div class="risky col-2">
-                <h1>Risky</h1>
+          <nav class="navbar px-4 py-2 px-4 py-2 shadow-sm">
+            <div class="container-fluid d-flex align-items-center justify-content-between">
+              <!--profile icon-->
+              <div>
+                <a href="/profile">
+                  <img src="/user-icon.png" alt="Profile" width="36" height="36" class="rounded-circle">
+                </a>
               </div>
               <!-- search bar-->
-              <div class="search-bar col-6">
-                <form class="form-inline" action="/search" method="get">
-                  <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                  <button class="btn btn-dark" type="submit">Search</button>
-                </form>
-              </div>
-                <div class="col-4">
-                  <div class="menu">
-                    <ul class="nav">
-                      <li class="nav-item">
-                        <a class="nav-link" href="profile.html">Profile</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">Settings</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">Logout</a>
-                      </li>
-                    </ul>
+              <form class="d-flex search-bar" role="search" method="get" action="/search">
+                  <div class="input-group">
+                      <input type="search" name="q" class="form-control" placeholder="Search..." aria-label="Search">
+                      <button class="btn btn-outline-secondary" type="submit">Search</button>
                   </div>
+              </form>
+              <!--+ add risk button-->
+              <div class="d-flex align-items-center gap-3">
+                  <a href="/add-risk" class="plus-button btn btn-danger rounded-circle d-flex justify-content-center align-items-center">+</a>
+                  <h3 class="text-white fw-bold fs-4">Risky</h3>
+              </div>
+              <div class="col-4">
+                <div class="menu">
+                  <ul class="nav">
+                    <li class="nav-item">
+                      <a class="nav-link" href="#">Settings</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#">Logout</a>
+                    </li>
+                  </ul>
                 </div>
               </div>
+            </div>
           </nav>
           <a href="/add-risk" class="btn btn-primary mb-3">+ Add New Risk</a>
           <a href="/kanban" class="btn btn-outline-primary mb-3">Kanban View</a>     
