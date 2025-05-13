@@ -1,16 +1,110 @@
-nav {
-    background-color: #4a90e2;
+.body{
+    min-height: 100vh;
 }
 
-.search-bar{
-    width:40%;
+.main-container{
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
 }
-.plus-button{
-    width: 36px; 
-    height: 36px; 
+
+/*--------------SIDEBAR CONTAINER-----------*/
+#sidebar{
+    max-width: 250px;
+    background-color: grey;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    color: white;
+}
+/*for responsive sizing*/
+@media (max-width: 768px) {
+  .sidebar-right {
+    width: 180px;
+  }
+
+  .risky-text {
     font-size: 20px;
+    margin-left: 15px;
+    padding-right: 10px;
+  }
+
+  .projects-text {
+    font-size: 16px;
+    margin-left: 15px;
+  }
+}
+/*line that underlines RISKY*/
+.sidebar-right hr {
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
 }
 
+.sidebar-right .listed-projects a {
+  color: white;
+  text-decoration: none;
+  font-size: 12px;
+  margin-left: 55px;
+  
+}
+
+.sidebar-right .listed-projects a:hover {
+  color: white; 
+  font-weight: bold;
+}
+
+.risky-text{
+    font-size: 30px;
+    padding-right: 20px;
+    margin-left: 40px;
+    padding-top: 7px;
+}
+ .projects-text{
+    margin-left: 50px;
+
+ }
+
+ @media (max-width: 768px) {
+  .risky-text {
+    font-size: 20px;
+    margin-left: 20px;
+    padding-right: 10px;
+  }
+
+  .projects-text {
+    font-size: 16px;
+    margin-left: 20px;
+  }
+}
+
+
+
+
+/*--------------NAVIGATION BAR AT TOP----------------*/
+nav {
+    background-color: grey;
+}
+
+.profile-icon{
+    width: 25%;
+}
+.search-bar-cont{
+    width: 50%;
+}
+.search-bar-form{
+    max-width: 400px;
+    width: 100%;
+}
+.settings-logout-cont{
+    width:25%;
+}
+
+
+
+/*----------------RISK TABLE---------------*/
+
+.table-container{
+    padding-left: 20px;
+}
 /*risk status and severity(level) icon colours*/
 .status-colour,
 .level-colour {

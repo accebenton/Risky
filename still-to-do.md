@@ -17,7 +17,7 @@ BACKEND TASKS
 6. more detailed errors to a separate file? for me to see not users
 
 ----Optional--------
-1. Chart.js visualizations
+1. Chart.js visualizations - export button
    -- Risk-level distribution, status over time, etc.
 3. logins
    -- only admins can delete or modify all risks?

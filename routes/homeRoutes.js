@@ -108,73 +108,76 @@ router.get('/home', (req, res) => {
   
         html +=
         `
-        <div class="container my-2">
-        <!--TOP NAVBAR-->
-          <nav class="navbar px-4 py-2 px-4 py-2 shadow-sm">
-            <div class="container-fluid d-flex align-items-center justify-content-between">
-              <!--profile icon-->
-              <div>
-                <a href="/profile">
-                  <img src="/user-icon.png" alt="Profile" width="36" height="36" class="rounded-circle">
-                </a>
-              </div>
-              <!-- search bar-->
-              <form class="d-flex search-bar" role="search" method="get" action="/search">
-                  <div class="input-group">
-                      <input type="search" name="q" class="form-control" placeholder="Search..." aria-label="Search">
-                      <button class="btn btn-outline-secondary" type="submit">Search</button>
+        <!--main content-->
+        <div class="d-flex flex-row main-container">
+          <div class="flex-grow-1">
+          <!--TOP NAVBAR-->
+            <nav class="navbar">
+              <div class="d-flex align-items-center w-100">
+                  <!--profile icon-->
+                  <div class="profile-icon text-start">
+                      <a href="/profile">
+                          <img src="user-icon.png" alt="Profile" width="36" height="36" class="rounded-circle">
+                      </a>
                   </div>
-              </form>
-              <!--+ add risk button-->
-              <div class="d-flex align-items-center gap-3">
-                  <a href="/add-risk" class="plus-button btn btn-danger rounded-circle d-flex justify-content-center align-items-center">+</a>
-                  <h3 class="text-white fw-bold fs-4">Risky</h3>
-              </div>
-              <div class="col-4">
-                <div class="menu">
-                  <ul class="nav">
-                    <li class="nav-item">
-                      <a class="nav-link" href="#">Settings</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="#">Logout</a>
-                    </li>
-                  </ul>
+                  <!-- search bar-->
+                  <div class="search-bar-cont d-flex justify-content-center">
+                    <form class="d-flex w-100 search-bar-form" role="search" method="get" action="/search">
+                        <div class="input-group w-100">
+                            <input type="search" name="q" class="form-control" placeholder="Search..." aria-label="Search">
+                            <button class="btn btn-danger" type="submit">Search</button>
+                        </div>
+                  </form>
+                </div>
+                <div class="settings-logout-cont d-flex justify-content-end">
+                  <div class="menu">
+                    <!--don't need these right now
+                    <ul class="nav">
+                      <li class="nav-item">
+                        <a class="nav-link" href="#">Settings</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#">Logout</a>
+                      </li>
+                    </ul>
+                  -->
+                  </div>
                 </div>
               </div>
-            </div>
-          </nav>
-          <a href="/add-risk" class="btn btn-primary mb-3">+ Add New Risk</a>
-          <a href="/kanban" class="btn btn-outline-primary mb-3">Kanban View</a>     
-          <div class="table">
-            <h1>Risks Table</h1>
-            <!-- SORTING INPUT FIELD -->
-            <!--template literals/ternary operators change placeholder view of input field to match selected view-->
-            <!-- ie if selected option matches, show selected option-->
-            <form method="get" action="/home" class="mb-4">
-              <label for="sort" class="form-label">Sort by:</label>
-              <select name="sort" id="sort" class="form-select" onchange="this.form.submit()">
-                <option value="" ${sort === '' || !sort ? 'selected' : ''}>By ID (default)</option>
-                <option value="level" ${sort === 'level' ? 'selected' : ''}>Risk Level (Critical to Low)</option>
-                <option value="name" ${sort === 'name' ? 'selected' : ''}>Risk name (A-Z)</option>
-                <option value="assigned" ${sort === 'assigned' ? 'selected' : ''}>Assigned User (A-Z)</option>
-              </select>
-            </form>
-            <form method="get" action ="/home" class="row g-2 mb-3">
-              <table class="table table-bordered table-hover">
-                <thead class="table-light">
-                  <tr>
-                    <th>ID</th>
-                    <th>Risk Name</th>
-                    <th>Date Created</th>
-                    <th>Status</th>
-                    <th>Risk Level</th>
-                    <th>Assigned To</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <!--tbody is where the info is pulled into from the backend-->
-                <tbody>`;
+            </nav>
+          <!--add risk and kanban buttons-->
+            <a href="/add-risk" class="btn btn-primary m-3">+ Add New Risk</a>
+            <a href="/kanban" class="btn btn-outline-primary m-3">Kanban View</a>
+            <div class="table table-container">
+              <!--Risk table-->
+              <h1>Risks Table</h1>
+              <!-- SORTING INPUT FIELD -->
+              <!--template literals/ternary operators change placeholder view of input field to match selected view-->
+              <!-- ie if selected option matches, show selected option-->
+              <form method="get" action="/home" class="mb-4 me-3">
+                <label for="sort" class="form-label">Sort by:</label>
+                <select name="sort" id="sort" class="form-select" onchange="this.form.submit()">
+                  <option value="" ${sort === '' || !sort ? 'selected' : ''}>By ID (default)</option>
+                  <option value="level" ${sort === 'level' ? 'selected' : ''}>Risk Level (Critical to Low)</option>
+                  <option value="name" ${sort === 'name' ? 'selected' : ''}>Risk name (A-Z)</option>
+                  <option value="assigned" ${sort === 'assigned' ? 'selected' : ''}>Assigned User (A-Z)</option>
+                </select>
+              </form>
+              <div class="table-responsive p-4">
+                  <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                      <tr>
+                        <th>ID</th>
+                        <th>Risk Name</th>
+                        <th>Date Created</th>
+                        <th>Status</th>
+                        <th>Risk Level</th>
+                        <th>Assigned To</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <!--tbody is where the info is pulled into from the backend-->
+                    <tbody>`;
   
       //loop through each risk from db and add row to ht
       // 
@@ -191,23 +194,39 @@ router.get('/home', (req, res) => {
             <td>${risk.assigned_to_name}</td>
             <!-- delete and edit buttons -->
             <td>
-              <a href="/deleterisk?id=${risk.id}" 
-                class="btn btn-danger btn-sm"
-                onclick="return confirm('Are you sure you want to delete this risk?');">Delete</a>
-              <a href="/editrisk?id=${risk.id}" class="btn btn-secondary btn-sm">Edit</a>
+              <div class="action-dropdown">
+                <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">...</button>
+                <ul class="dropdown-menu">
+                  <li><a href="/editrisk?id=${risk.id}" class="btn btn-secondary btn-sm">Edit</a></li>
+                  <li><a href="/deleterisk?id=${risk.id}" 
+                  class="btn btn-danger btn-sm"
+                  onclick="return confirm('Are you sure you want to delete this risk?');">Delete</a></li>
+                </ul>
             </td>
           </tr>
         `;
       }
   
       html += ` 
-                    </tbody>
+                      </tbody>
                   </table>
                 </div>
               </div>
-            </div>          
-          </body>
-        </html>
+            </div>
+            <!--sidebar -->
+            <div class="sidebar-right text-white" id="sidebar">
+              <h4 class="risky-text fw-bold text-end pr-4">Risky</h4>
+              <hr class="border-light">
+              <h6 class="projects-text">Projects</h6>
+              <ul class="list-unstyled listed-projects">
+                <li><a href="#">Project A</a></li>
+                <li><a href="#">Project B</a></li>
+                <li><a href="#">Project C</a></li>
+              </ul>
+            </div>
+          </div>          
+        </body>
+      </html>
         `;
   
   
