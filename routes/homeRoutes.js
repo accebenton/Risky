@@ -75,8 +75,10 @@ router.get('/home', (req, res) => {
    
     //for success message using express.session
     const message = req.session.message; 
+    const messageType = req.sessionStore.messageType || 'success';
     //only show message once then clear
     req.session.message = null;
+    req.session.messageType = null;
   
     db.all(sql, [], function(err, rows) {
       if(err){
@@ -116,7 +118,10 @@ router.get('/home', (req, res) => {
   
         //session message for success message upon adding/deleting/editng risk
         if (message) {
-          html += `<div class="alert alert-success">${message}</div>`;
+          html += `
+            <div class="alert alert-${messageType} custom-alert shadow-lg text-white d-flex align-items-center" role="alert">
+              <strong class="me-2">Success:</strong> ${message}
+            </div>`;
         } 
   
         html +=
@@ -153,7 +158,7 @@ router.get('/home', (req, res) => {
                         <a class="nav-link" href="#">Logout</a>
                       </li>
                     </ul>
-                  -->
+                    -->
                   </div>
                 </div>
               </div>
@@ -266,12 +271,26 @@ router.get('/home', (req, res) => {
                 <li><a href="#">Project C</a></li>
               </ul>
             </div>
-          </div>          
+          </div> 
+          <footer class="footer mt-5 py-3 bg-light border-top text-center text-muted">
+            <small>
+              This tool stores data for the purpose of demonstration only.
+              No personal data is shared externally.
+            </small>
+          </footer>
+          <!--successful update alert message js --!>
+          <script>
+            setTimeout(() => {
+              const alert = document.querySelector('.custom-alert');
+              if (alert) {
+                alert.classList.add('fade');
+                alert.style.opacity = '0';
+              }
+            }, 3000);
+          </script> 
         </body>
       </html>
-        `;
-  
-  
+        `; 
         //sends page to browser
         res.send(html);
 
