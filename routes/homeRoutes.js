@@ -29,6 +29,10 @@ router.get('/home', (req, res) => {
     // get all risks from db, changed from const to let for sort/filter
      // for sort/filter field
     const sort = req.query.sort;
+    const message = req.session.message;
+    const messageType = req.session.messageType;
+    req.session.message = null;
+    req.session.messageType = null;
     let sql = 
       `SELECT 
         risks.id,
@@ -74,7 +78,7 @@ router.get('/home', (req, res) => {
     }
    
     //for success message using express.session
-    const message = req.session.message; 
+    message = req.session.message; 
     //only show message once then clear
     req.session.message = null;
   
@@ -116,7 +120,10 @@ router.get('/home', (req, res) => {
   
         //session message for success message upon adding/deleting/editng risk
         if (message) {
-          html += `<div class="alert alert-success">${message}</div>`;
+          html += `
+            <div class="alert alert-${messageType} custom-alert alert-dismissible fade show" role="alert">
+              ${message}
+            </div>`;
         } 
   
         html +=

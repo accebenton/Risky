@@ -1,12 +1,10 @@
 BACKEND TASKS
 ----Definitely Add-----
-5. Add a little info icon in the risk level table header
-3. separate riskRoutes into smaller route files
+5. replace i with a little info icon in the risk level table header
 5. change the anchor for /viewrisk to risk name, not id? or both?
 7. i have some error msgs come up in the console. is this correct way to show msgs for developers? - research
-2. update colours of success messages. not clear that they are different, need to set time on how long message lasts
-   -- dont like placement of message
-
+1. write some test cases out and record, fix any issues
+4. GDPR or privacy notice in footer?
 ----would be good to add but not essential-----
 
 2. user assign the risk to a sprint ie sprint 2
@@ -18,7 +16,7 @@ BACKEND TASKS
    -- Risk-level distribution, status over time, etc.
 3. logins
    -- only admins can delete or modify all risks?
-4. GDPR or privacy notice in footer?
+
 
 
 FRONT END TASKS

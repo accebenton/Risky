@@ -6,7 +6,15 @@ const session = require('express-session');
 const db = require('./db');
 // define the other route files so they can be pulled in
 const homeRoutes = require('./routes/homeRoutes');
-const riskRoutes = require('./routes/riskRoutes');
+const addRisk = require('./routes/riskRoutes/addRisk');
+const deleteRisk = require('./routes/riskRoutes/deleteRisk');
+const editRisk = require('./routes/riskRoutes/editRisk');
+const updateRisk = require('./routes/riskRoutes/updateRisk');
+const viewRisk = require('./routes/riskRoutes/viewRisk');
+const kanban = require('./routes/riskRoutes/kanban');
+const statusUpdate = require('./routes/riskRoutes/statusUpdate');
+
+
 //express function to create web app
 const app = express();
 // this is for POST requests so the form fields can be read
@@ -22,9 +30,15 @@ app.use(session({
   saveUninitialized: true
 }));
 
-// POST /addrisk will be done in riskRoutes file
+// POST routes
 app.use('/', homeRoutes);
-app.use('/', riskRoutes);
+app.use('/', addRisk);
+app.use('/', deleteRisk);
+app.use('/', editRisk);
+app.use('/', updateRisk);
+app.use('/', viewRisk);
+app.use('/', kanban);
+app.use('/', statusUpdate);
 
 
 //tell express to use public folder cont html and css
