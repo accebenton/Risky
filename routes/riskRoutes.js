@@ -26,7 +26,7 @@ router.post('/addrisk', (req, res) => {
   //console.log('/addrisk called');
     // takes from req.body (because its POST not GET)
     const name = req.body.name;
-    const dateCreated = getFormattedDate();
+    const date_created = getFormattedDate();
     const likelihood = req.body.likelihood; // scale of 1–5
     const impact = req.body.impact;     // scale of 1–5
     const description = req.body.description || null;
@@ -53,9 +53,9 @@ router.post('/addrisk', (req, res) => {
 
     //insert into db
     db.run(
-        `INSERT INTO risks (name, dateCreated, likelihood, impact, risk_status, risk_level, assigned_to, description, mitigation, last_updated) 
+        `INSERT INTO risks (name, date_created, likelihood, impact, risk_status, risk_level, assigned_to, description, mitigation, last_updated) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [name, dateCreated, likelihood, impact, risk_status, risk_level, assigned_to, description, mitigation, null],
+        [name, date_created, likelihood, impact, risk_status, risk_level, assigned_to, description, mitigation, null],
         /*this function runs after code is inserted - if error, then return (response.send) msg
         to browser. if not, risk added*/
         function(err) {
@@ -160,6 +160,37 @@ router.get('/deleterisk', (req, res) => {
     });
 });
 
+//MARK CLOSED RISK ROUTE
+router.get('/mark-closed', (req, res) => {
+    //get id from URL ie ?id=3
+    const id= req.query.id;
+  
+    //check id was found
+    if(!id){
+      return res.send('No ID found');
+    }
+  
+    //run sql query to delete ID's row
+    const sql = `
+      UPDATE risks
+      SET risk_status = 'Closed',
+      last_updated = ?
+      WHERE id = ?
+    `;;
+    
+    const now = new Date().toISOString();
+
+    db.run(sql, [now, id], function(err) {
+      if (err) {
+        console.error('Error. Failed to mark as closed:', err.message);
+        return res.send("Failed to update status.");
+      }
+      //for success message
+      req.session.message = 'Risk Closed';
+      //redirect to home after update
+      res.redirect('/home');
+    });
+});
 
 
 //EDIT RISK ROUTE
@@ -295,7 +326,7 @@ router.get('/viewrisk', (req, res) => {
     SELECT 
       risks.id,
       risks.name,
-      risks.dateCreated,
+      risks.date_created,
       risks.likelihood,
       risks.impact,
       risks.risk_level,
@@ -321,7 +352,7 @@ router.get('/viewrisk', (req, res) => {
       <body class="container mt-5">
         <h1>${risk.name}</h1>
         <p><strong>Assigned To:</strong> ${risk.assigned_to_name}</p>
-        <p><strong>Date Created:</strong> ${risk.dateCreated}</p>
+        <p><strong>Date Created:</strong> ${risk.date_created}</p>
         <p><strong>Last Updated:</strong> ${risk.last_updated || 'Not updated yet'}</p>
         <p><strong>Status:</strong> ${risk.risk_status}</p>
         <p><strong>Likelihood:</strong> ${risk.likelihood}</p>

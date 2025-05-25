@@ -33,12 +33,15 @@ router.get('/home', (req, res) => {
       `SELECT 
         risks.id,
         risks.name,
-        risks.dateCreated,
+        risks.date_created,
         risks.likelihood,
         risks.impact,
         risks.risk_level,
         risks.risk_status,
-        users.name AS assigned_to_name
+        users.name AS assigned_to_name,
+        risks.date_created,
+        risks.last_updated
+
       FROM risks
       LEFT JOIN users ON risks.assigned_to = users.id
       `;
@@ -59,6 +62,15 @@ router.get('/home', (req, res) => {
       sql += ' ORDER BY name ASC';
     } else if (sort === 'assigned'){
       sql += ` ORDER BY assigned_to ASC`;
+    } else if (sort === 'status'){
+      sql += `
+          ORDER BY CASE risk_status
+            WHEN 'Open' THEN 1
+            WHEN 'In Progress' THEN 2
+            WHEN 'Closed' THEN 3
+          END`;
+    } else if (sort === 'date_created'){
+      sql += ` ORDER BY date_created DESC`
     }
    
     //for success message using express.session
@@ -68,6 +80,7 @@ router.get('/home', (req, res) => {
   
     db.all(sql, [], function(err, rows) {
       if(err){
+        console.error('Error:', err.message);
         return res.send('There was an error');
       }
       //get users from users table for drop down in for
@@ -161,6 +174,8 @@ router.get('/home', (req, res) => {
                   <option value="level" ${sort === 'level' ? 'selected' : ''}>Risk Level (Critical to Low)</option>
                   <option value="name" ${sort === 'name' ? 'selected' : ''}>Risk name (A-Z)</option>
                   <option value="assigned" ${sort === 'assigned' ? 'selected' : ''}>Assigned User (A-Z)</option>
+                  <option value="status" ${sort === 'status' ? 'selected' : ''}>Risk Status (Open to Closed)</option>
+                  <option value="date_created" ${sort === 'date_created' ? 'selected' : ''}>Date Created (Newest to Oldest)</option>
                 </select>
               </form>
               <div class="table-responsive p-4">
@@ -171,7 +186,14 @@ router.get('/home', (req, res) => {
                         <th>Risk Name</th>
                         <th>Date Created</th>
                         <th>Status</th>
-                        <th>Risk Level</th>
+                        <th>
+                          Risk Level
+                          <span 
+                            title="Calculated from Likelihood x Impact"
+                            style="cursor: help;"
+                            class="text-black ms-1">i
+                          </span>
+                        </th>
                         <th>Assigned To</th>
                         <th>Actions</th>
                       </tr>
@@ -186,22 +208,42 @@ router.get('/home', (req, res) => {
         const risk = rows[i];
         html += `
           <tr>
-            <td><a href="/viewrisk?id=${risk.id}">${risk.id}</a></td>
+            <td>
+              <a href="/viewrisk?id=${risk.id}">${risk.id}</a>
+            </td>
             <td>${risk.name}</td>
-            <td>${risk.dateCreated}</td>
-            <td><span class="status-colour bg-${getStatusColour(risk.risk_status)}">${risk.risk_status}</span></td>
-            <td><span class="level-colour bg-${getLevelColour(risk.risk_level)}">${risk.risk_level}</span></td>
+            <td>${risk.date_created}</td>
+            <td>
+              <span class="status-colour bg-${getStatusColour(risk.risk_status)}">${risk.risk_status}</span>
+            </td>
+            <td>
+              <span class="level-colour bg-${getLevelColour(risk.risk_level)} me-2">
+                ${risk.risk_level}
+              </span>
+            </td>
             <td>${risk.assigned_to_name}</td>
             <!-- delete and edit buttons -->
             <td>
               <div class="action-dropdown">
-                <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">...</button>
+                <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                  ...
+                </button>
                 <ul class="dropdown-menu">
-                  <li><a href="/editrisk?id=${risk.id}" class="btn btn-secondary btn-sm">Edit</a></li>
-                  <li><a href="/deleterisk?id=${risk.id}" 
-                  class="btn btn-danger btn-sm"
-                  onclick="return confirm('Are you sure you want to delete this risk?');">Delete</a></li>
+                 ${risk.risk_status !== 'Closed' ? ` 
+                  <li>  
+                    <a href="/mark-closed?id=${risk.id}" class="dropdown-item text-success">Mark Closed</a>
+                  ` : ''}
+                  </li>
+                  <li>
+                    <a href="/editrisk?id=${risk.id}" class="dropdown-item">Edit</a>
+                  </li>
+                  <li>
+                    <a href="/deleterisk?id=${risk.id}" 
+                    class="dropdown-item text-danger"
+                    onclick="return confirm('Are you sure you want to delete this risk?');">Delete</a>
+                  </li>
                 </ul>
+              </div>
             </td>
           </tr>
         `;

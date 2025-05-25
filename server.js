@@ -52,7 +52,7 @@ db.run(`
     CREATE TABLE IF NOT EXISTS risks (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT,
-      dateCreated TEXT,
+      date_created TEXT,
       likelihood INTEGER,
       impact INTEGER,
       risk_status TEXT,
