@@ -21,7 +21,8 @@ router.get('/deleterisk', (req, res) => {
         return res.send('Error');
       }
       //for success message
-      req.session.messageType = 'success';
+      req.session.message = 'Risk deleted';
+      
       //redirect to home after deletion
       res.redirect('/home');
     });
