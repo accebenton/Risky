@@ -26,10 +26,10 @@ BACKEND TASKS
 
 FRONT END TASKS
 1. build a front end after back end core functions are working -- updated to do list at later date
-   1. change LOW MEDIUM and CRITICAL to be coloured green orange and red
    2. update the view risk and edit risk routes to be better presented
    3. update view of kanban view
-1. might need to wrap table in bootstap container to further edit down the line
+   4. make sure is responsive on all pages
+
 
 
 
