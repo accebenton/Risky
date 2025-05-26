@@ -127,11 +127,11 @@ router.get('/home', (req, res) => {
         html +=
         `
         <!--main content-->
-        <div class="d-flex flex-row main-container">
-          <div class="flex-grow-1">
-          <!--TOP NAVBAR-->
-            <nav class="navbar">
-              <div class="d-flex align-items-center w-100">
+          <div class="d-flex flex-row main-container">
+            <div class="flex-grow-1">
+            <!--TOP NAVBAR-->
+              <nav class="navbar">
+                <div class="d-flex align-items-center w-100">
                   <!--profile icon-->
                   <div class="profile-icon text-start">
                       <a>
@@ -163,48 +163,48 @@ router.get('/home', (req, res) => {
                 </div>
               </div>
             </nav>
-          <!--ADD RISK AND KANBAN BUTTONS-->
-            <a href="/add-risk" class="btn btn-primary m-3">+ Add New Risk</a>
-            <a href="/kanban" class="btn btn-outline-primary m-3">Kanban View</a>
-            <div class="table table-container">
-              <!--Risk table-->
-              <h1>Risks Table</h1>
-              <!-- SORTING INPUT FIELD -->
-              <!--template literals/ternary operators change placeholder view of input field to match selected view-->
-              <!-- ie if selected option matches, show selected option-->
-              <form method="get" action="/home" class="sort-dropdown mb-4 me-3">
-                <label for="sort" class="form-label">Sort by:</label>
-                <select name="sort" id="sort" class="form-select" onchange="this.form.submit()">
-                  <option value="" ${sort === '' || !sort ? 'selected' : ''}>By ID (default)</option>
-                  <option value="level" ${sort === 'level' ? 'selected' : ''}>Risk Level (Critical to Low)</option>
-                  <option value="name" ${sort === 'name' ? 'selected' : ''}>Risk name (A-Z)</option>
-                  <option value="assigned" ${sort === 'assigned' ? 'selected' : ''}>Assigned User (A-Z)</option>
-                  <option value="status" ${sort === 'status' ? 'selected' : ''}>Risk Status (Open to Closed)</option>
-                  <option value="date_created" ${sort === 'date_created' ? 'selected' : ''}>Date Created (Newest to Oldest)</option>
-                </select>
-              </form>
-              <div class="table-responsive p-4">
-                  <table class="table table-bordered table-hover">
-                    <thead class="table-light">
-                      <tr>
-                        <th>ID</th>
-                        <th>Risk Name</th>
-                        <th>Date Created</th>
-                        <th>Status</th>
-                        <th>
-                          Risk Level
-                          <img 
-                            src="info-icon.png" 
-                            alt="Info" 
-                            title="Calculated from Likelihood x Impact"
-                          </img>
-                        </th>
-                        <th>Assigned To</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <!--tbody is where the info is pulled into from the backend-->
-                    <tbody>`;
+            <!--ADD RISK AND KANBAN BUTTONS-->
+                <a href="/add-risk" class="btn btn-primary m-3">+ Add New Risk</a>
+                <a href="/kanban" class="btn btn-outline-primary m-3">Kanban View</a>
+                <div class="table table-container">
+                  <!--Risk table-->
+                  <h1>Risks Table</h1>
+                  <div class="table-responsive p-4">
+                      <!-- SORTING INPUT FIELD -->
+                      <!--template literals/ternary operators change placeholder view of input field to match selected view-->
+                      <!-- ie if selected option matches, show selected option-->
+                      <form method="get" action="/home" class="d-flex align-items-center sort-dropdown mb-2">
+                          <label for="sort" class="me-2 mb-0" style="background-color: transparent;">Sort by:</label>
+                          <select name="sort" id="sort" class="form-select form-select-sm" onchange="this.form.submit()">
+                          <!--<option value="" ${sort === '' || !sort ? 'selected' : ''}>By ID (default)</option>
+                          <option value="level" ${sort === 'level' ? 'selected' : ''}>Risk Level (Critical to Low)</option>
+                          <option value="name" ${sort === 'name' ? 'selected' : ''}>Risk name (A-Z)</option>
+                          <option value="assigned" ${sort === 'assigned' ? 'selected' : ''}>Assigned User (A-Z)</option>
+                          <option value="status" ${sort === 'status' ? 'selected' : ''}>Risk Status (Open to Closed)</option>
+                          <option value="date_created" ${sort === 'date_created' ? 'selected' : ''}>Date Created (Newest to Oldest)</option>-->
+                      </select>
+                      </form>
+                      <table class="table table-hover table-striped">
+                        <thead>
+                          <tr class="table-header">
+                            <th>ID</th>
+                            <th>Risk Name</th>
+                            <th>Date Created</th>
+                            <th>Status</th>
+                            <th>
+                              Risk Level
+                              <img 
+                                src="info-icon.png" 
+                                alt="Info" 
+                                title="Calculated from Likelihood x Impact"
+                              >
+                            </th>
+                            <th>Assigned To</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <!--tbody is where the info is pulled into from the backend-->
+                        <tbody>`;
   
       //loop through each risk from db and add row to ht
       // 

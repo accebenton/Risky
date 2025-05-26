@@ -132,17 +132,22 @@ nav {
     width:25%;
 }
 
+
+
+/*----------------------------------RISK TABLE-------------------------------------*/
+
+
 /*----------------SORT DROPDOWN--------------*/
 .sort-dropdown{
-  width: 10%;
+  width: 50%;
   margin-top: 30px;
   margin-bottom: 0px;
   margin-left:0px;
   padding-bottom: 0px;
-
+  padding-left: 0;
 }
 
-/*----------------RISK TABLE---------------*/
+
 
 .table-container{
     padding-left: 20px;
@@ -152,6 +157,28 @@ nav {
   padding-top: 0px;
   margin-top: 0;
 }
+
+.table-responsive label{
+  width: auto;
+  padding-right: 10px;
+}
+
+.table-responsive form{
+  width: 30%;
+}
+
+
+.table-header th{
+  background-color: #757575;
+  color: white;
+  border: solid black 2px;
+}
+
+. table td{
+  border-top: solid black 2px;
+  border-bottom: solid black 2px;
+}
+
 /*risk status and severity(level) icon colours*/
 .status-colour,
 .level-colour {
