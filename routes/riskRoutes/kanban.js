@@ -35,73 +35,91 @@ router.get('/kanban', (req, res) => {
 
     //HTML
     let html = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Kanban View</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
-        <style>
-          .kanban-column {
-            border: 1px solid #ccc;
-            padding: 10px;
-            min-height: 300px;
-            width: 30%;
-            float: left;
-            margin-right: 10px;
-            background: #f8f9fa;
-          }
-          .risk-card {
-            background: white;
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-          }
-        </style>
-      </head>
-      <body class="p-4">
-        <h1>Kanban Board</h1>
-        <div class="d-flex justify-content-between">
-
-          <div class="kanban-column">
-            <h3>Open</h3>
-            ${grouped['Open'].map(r => `
-              <div class="risk-card">
-                <strong>${r.name}</strong><br>
-                Level: ${r.risk_level}<br>
-                Assigned to: ${r.assigned_to_name || 'Unassigned'}
-              </div>
-            `).join('')}
+<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8" />
+      <title>Kanban View</title>
+      <!-- bootstrap css-->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" 
+          rel="stylesheet" 
+          integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" 
+          crossorigin="anonymous">
+      <link rel="stylesheet" href="style.css" />
+      <!-- jQuery, Popper.js, and Bootstrap JS -->
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" 
+          integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" 
+          crossorigin="anonymous">
+      </script>
+    </head>
+    <body>
+      <!--TOP NAVBAR-->
+        <nav class="navbar">
+          <div class="d-flex align-items-center w-100">
+            <!--profile icon-->
+            <div class="profile-icon text-start">
+                <a>
+                    <img src="user-icon.png" alt="Profile" width="36" height="36" class="rounded-circle">
+                </a>
+            </div>
+            <!-- search bar-->
+            <div class="search-bar-cont d-flex justify-content-center">
+              <form class="d-flex w-100 search-bar-form" role="search" method="get" action="/search">
+                  <div class="input-group w-100">
+                      <input type="search" name="q" class="form-control" placeholder="Search..." aria-label="Search">
+                      <button class="btn search-button" type="submit">Search</button>
+                  </div>
+            </form>
           </div>
-
-          <div class="kanban-column">
-            <h3>In Progress</h3>
-            ${grouped['In Progress'].map(r => `
-              <div class="risk-card">
-                <strong>${r.name}</strong><br>
-                Level: ${r.risk_level}<br>
-                Assigned to: ${r.assigned_to_name || 'Unassigned'}
-              </div>
-            `).join('')}
+          <div class="settings-logout-cont d-flex justify-content-end">
+            <h4 class="risky-text fw-bold text-end pr-4 text-white">Risky</h4>
+            <hr class="border-light">
           </div>
-
-          <div class="kanban-column">
-            <h3>Closed</h3>
+        </div>
+      </nav>
+      <h1 class="text-center mt-5">Kanban Board</h1>
+      <div class="d-flex justify-content-between mt-5 ps-2">
+          <!--OPEN COLUMN-->
+          <div class="kanban-column open-column">
+          <h3 class="text-center fs-3">Open</h3>
+          ${grouped['Open'].map(r => `
+            <div class="risk-card">
+              <strong>${r.name}</strong><br>
+              Level: ${r.risk_level}<br>
+              Assigned to: ${r.assigned_to_name || 'Unassigned'}
+            </div>
+          `).join('')}
+          </div>
+          <!--IN PROGRESS COLUMN-->
+          <div class="kanban-column in-progress-column">
+          <h3 class="text-center fs-3">In Progress</h3>
+          ${grouped['In Progress'].map(r => `
+            <div class="risk-card">
+              <strong>${r.name}</strong><br>
+              Level: ${r.risk_level}<br>
+              Assigned to: ${r.assigned_to_name || 'Unassigned'}
+            </div>
+          `).join('')}
+          </div>
+          <!--CLOSED COLUMN-->
+          <div class="kanban-column closed-column">
+            <h3 class="text-center fs-3">Closed</h3>
             ${grouped['Closed'].map(r => `
               <div class="risk-card">
-                <strong>${r.name}</strong><br>
-                Level: ${r.risk_level}<br>
-                Assigned to: ${r.assigned_to_name || 'Unassigned'}
+                  <strong>${r.name}</strong><br>
+                  Level: ${r.risk_level}<br>
+                  Assigned to: ${r.assigned_to_name || 'Unassigned'}
               </div>
-            `).join('')}
+              `).join('')}
           </div>
-
-        </div>
-        <div style="clear: both; margin-top: 20px;">
-          <a href="/home" class="btn btn-secondary">Back to Home</a>
-        </div>
-      </body>
-      </html>
+      </div>
+      <div style="clear: both; margin-top: 20px;">
+        <a href="/home" class="btn btn-secondary">Back to Home</a>
+      </div>
+    </body>
+  </html>
     `;
 
     res.send(html);
