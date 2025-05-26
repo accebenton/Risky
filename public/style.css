@@ -132,12 +132,25 @@ nav {
     width:25%;
 }
 
+/*----------------SORT DROPDOWN--------------*/
+.sort-dropdown{
+  width: 10%;
+  margin-top: 30px;
+  margin-bottom: 0px;
+  margin-left:0px;
+  padding-bottom: 0px;
 
+}
 
 /*----------------RISK TABLE---------------*/
 
 .table-container{
     padding-left: 20px;
+}
+
+.table-responsive{
+  padding-top: 0px;
+  margin-top: 0;
 }
 /*risk status and severity(level) icon colours*/
 .status-colour,
@@ -166,4 +179,12 @@ nav {
 footer.footer {
   font-size: 0.85rem;
   color: #6c757d;
+}
+
+th img {
+width: 16px;
+height: 16px; 
+cursor: help; 
+margin-left: 6px; 
+margin-bottom: 4px;
 }

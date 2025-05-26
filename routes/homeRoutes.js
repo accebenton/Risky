@@ -114,7 +114,7 @@ router.get('/home', (req, res) => {
           </script>
           <title>Risk Management Tool</title>
         </head>
-        <body>`
+        <body class="bg-light">`
   
         //session message for success message upon adding/deleting/editng risk
         if (message) {
@@ -134,7 +134,7 @@ router.get('/home', (req, res) => {
               <div class="d-flex align-items-center w-100">
                   <!--profile icon-->
                   <div class="profile-icon text-start">
-                      <a href="/profile">
+                      <a>
                           <img src="user-icon.png" alt="Profile" width="36" height="36" class="rounded-circle">
                       </a>
                   </div>
@@ -163,7 +163,7 @@ router.get('/home', (req, res) => {
                 </div>
               </div>
             </nav>
-          <!--add risk and kanban buttons-->
+          <!--ADD RISK AND KANBAN BUTTONS-->
             <a href="/add-risk" class="btn btn-primary m-3">+ Add New Risk</a>
             <a href="/kanban" class="btn btn-outline-primary m-3">Kanban View</a>
             <div class="table table-container">
@@ -172,7 +172,7 @@ router.get('/home', (req, res) => {
               <!-- SORTING INPUT FIELD -->
               <!--template literals/ternary operators change placeholder view of input field to match selected view-->
               <!-- ie if selected option matches, show selected option-->
-              <form method="get" action="/home" class="mb-4 me-3">
+              <form method="get" action="/home" class="sort-dropdown mb-4 me-3">
                 <label for="sort" class="form-label">Sort by:</label>
                 <select name="sort" id="sort" class="form-select" onchange="this.form.submit()">
                   <option value="" ${sort === '' || !sort ? 'selected' : ''}>By ID (default)</option>
@@ -193,11 +193,11 @@ router.get('/home', (req, res) => {
                         <th>Status</th>
                         <th>
                           Risk Level
-                          <span 
+                          <img 
+                            src="info-icon.png" 
+                            alt="Info" 
                             title="Calculated from Likelihood x Impact"
-                            style="cursor: help;"
-                            class="text-black ms-1">i
-                          </span>
+                          </img>
                         </th>
                         <th>Assigned To</th>
                         <th>Actions</th>
@@ -278,7 +278,7 @@ router.get('/home', (req, res) => {
               No personal data is shared externally.
             </small>
           </footer>
-          <!--successful update alert message js --!>
+          <!--successful update alert message js -->
           <script>
             setTimeout(() => {
               const alert = document.querySelector('.custom-alert');
