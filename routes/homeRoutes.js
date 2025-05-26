@@ -143,7 +143,7 @@ router.get('/home', (req, res) => {
                     <form class="d-flex w-100 search-bar-form" role="search" method="get" action="/search">
                         <div class="input-group w-100">
                             <input type="search" name="q" class="form-control" placeholder="Search..." aria-label="Search">
-                            <button class="btn btn-danger" type="submit">Search</button>
+                            <button class="btn search-button" type="submit">Search</button>
                         </div>
                   </form>
                 </div>
@@ -164,33 +164,38 @@ router.get('/home', (req, res) => {
               </div>
             </nav>
             <!--ADD RISK AND KANBAN BUTTONS-->
-                <a href="/add-risk" class="btn btn-primary m-3">+ Add New Risk</a>
-                <a href="/kanban" class="btn btn-outline-primary m-3">Kanban View</a>
+                <a href="/add-risk" class="btn add-new-risk m-3">+ Add New Risk</a>
+                <a href="/kanban" class="btn kanban-view m-3">Kanban View</a>
                 <div class="table table-container">
                   <!--Risk table-->
-                  <h1>Risks Table</h1>
-                  <div class="table-responsive p-4">
+                  <h1 class="text-center">Risks Dashboard</h1>
+                  <div class="table-responsive">
                       <!-- SORTING INPUT FIELD -->
                       <!--template literals/ternary operators change placeholder view of input field to match selected view-->
                       <!-- ie if selected option matches, show selected option-->
                       <form method="get" action="/home" class="d-flex align-items-center sort-dropdown mb-2">
                           <label for="sort" class="me-2 mb-0" style="background-color: transparent;">Sort by:</label>
                           <select name="sort" id="sort" class="form-select form-select-sm" onchange="this.form.submit()">
-                          <!--<option value="" ${sort === '' || !sort ? 'selected' : ''}>By ID (default)</option>
+                          <option value="" ${sort === '' || !sort ? 'selected' : ''}>By ID (default)</option>
                           <option value="level" ${sort === 'level' ? 'selected' : ''}>Risk Level (Critical to Low)</option>
                           <option value="name" ${sort === 'name' ? 'selected' : ''}>Risk name (A-Z)</option>
                           <option value="assigned" ${sort === 'assigned' ? 'selected' : ''}>Assigned User (A-Z)</option>
                           <option value="status" ${sort === 'status' ? 'selected' : ''}>Risk Status (Open to Closed)</option>
-                          <option value="date_created" ${sort === 'date_created' ? 'selected' : ''}>Date Created (Newest to Oldest)</option>-->
+                          <option value="date_created" ${sort === 'date_created' ? 'selected' : ''}>Date Created (Newest to Oldest)</option>
                       </select>
                       </form>
                       <table class="table table-hover table-striped">
                         <thead>
                           <tr class="table-header">
-                            <th>ID</th>
+                            <th>ID
+                            <img 
+                                src="info-icon.png" 
+                                alt="Info" 
+                                title="Click ID to view more details"
+                              >
+                            </th>
                             <th>Risk Name</th>
                             <th>Date Created</th>
-                            <th>Status</th>
                             <th>
                               Risk Level
                               <img 
@@ -199,6 +204,7 @@ router.get('/home', (req, res) => {
                                 title="Calculated from Likelihood x Impact"
                               >
                             </th>
+                            <th>Status</th>
                             <th>Assigned To</th>
                             <th>Actions</th>
                           </tr>
@@ -214,17 +220,17 @@ router.get('/home', (req, res) => {
         html += `
           <tr>
             <td>
-              <a href="/viewrisk?id=${risk.id}">${risk.id}</a>
+              <a href="/viewrisk?id=${risk.id}" class="risk-id-link">${risk.id}</a>
             </td>
             <td>${risk.name}</td>
             <td>${risk.date_created}</td>
             <td>
-              <span class="status-colour bg-${getStatusColour(risk.risk_status)}">${risk.risk_status}</span>
-            </td>
-            <td>
               <span class="level-colour bg-${getLevelColour(risk.risk_level)} me-2">
                 ${risk.risk_level}
               </span>
+            </td>
+            <td>
+              <span class="status-colour bg-${getStatusColour(risk.risk_status)}">${risk.risk_status}</span>
             </td>
             <td>${risk.assigned_to_name}</td>
             <!-- delete and edit buttons -->

@@ -11,10 +11,42 @@ body {
   flex-direction: row;
 }
 
+/*-----------BUTTONS----------------*/
+
+.add-new-risk{
+  border: 2px solid #C39000;
+  background-color: #FFB74D;
+  color: black;                
+  }
+
+.kanban-view{
+  border: 2px solid #5486a3;
+  background-color: #4DD0E1;  
+  color: #000;
+}
+ 
+.search-button{
+  border: 2px solid white;
+  color: white;
+}
+
+/*hover response of buttons*/
+.add-new-risk:hover {
+  background-color: #FFA726; 
+}
+
+.kanban-view:hover {
+  background-color: #26C6DA; 
+}
+
+.btn:hover {
+  filter: brightness(0.9);
+}
+
 /*--------------SIDEBAR CONTAINER-----------*/
 #sidebar{
     max-width: 250px;
-    background-color: grey;
+    background-color: #333333;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -115,7 +147,7 @@ body {
 
 /*--------------NAVIGATION BAR AT TOP----------------*/
 nav {
-    background-color: grey;
+  background-color: #333333;
 }
 
 .profile-icon{
@@ -123,6 +155,7 @@ nav {
 }
 .search-bar-cont{
     width: 50%;
+    padding-left: 30px;
 }
 .search-bar-form{
     max-width: 400px;
@@ -139,44 +172,71 @@ nav {
 
 /*----------------SORT DROPDOWN--------------*/
 .sort-dropdown{
-  width: 50%;
   margin-top: 30px;
   margin-bottom: 0px;
   margin-left:0px;
   padding-bottom: 0px;
   padding-left: 0;
+
+}
+/*Sort By text*/
+.table-responsive label{
+  width: 20%;
+  padding-right: 10px;
+
+  
 }
 
-
+/*Risks Dashboard heading*/
+.table-container h1{
+  padding: 0px;
+  margin: 10px;
+  text-decoration: underline;
+}
 
 .table-container{
-    padding-left: 20px;
+  padding-left: 20px;
 }
 
 .table-responsive{
   padding-top: 0px;
-  margin-top: 0;
-}
-
-.table-responsive label{
-  width: auto;
-  padding-right: 10px;
+  padding-right: 20px;
+  padding-left: 20px;
+  margin-top: 0px;
 }
 
 .table-responsive form{
-  width: 30%;
+  width: 35%;
+  padding-top: 0;
+  margin-top: 0;
+
 }
 
 
 .table-header th{
   background-color: #757575;
   color: white;
-  border: solid black 2px;
+  border-top: solid black 1px;
+  border-bottom: solid black 1px;
+
+}
+/*Risk id buttons to go to /viewrisk*/
+.risk-id-link {
+  color: #174ab8;
+  text-decoration: none;
+  font-weight: bold;
+  
 }
 
-. table td{
-  border-top: solid black 2px;
-  border-bottom: solid black 2px;
+.risk-id-link:hover {
+  color: #000000;
+  text-decoration: underline;
+}
+
+
+.table td{
+  border-top: solid black 1px;
+  border-bottom: solid black 1px;
 }
 
 /*risk status and severity(level) icon colours*/
