@@ -51,6 +51,7 @@ body {
     flex-direction: column;
     justify-content: flex-start;
     color: white;
+    padding: 0px 20px;
     height: auto;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 20px;
@@ -72,34 +73,59 @@ body {
     margin-left: 15px;
   }
 }
-/*line that underlines RISKY*/
-.sidebar-right hr {
-  border-top: 1px solid rgba(255, 255, 255, 0.4);
+
+/*RISKY logo font*/
+.risky-text{
+    font-size: 30px;
+    padding-right: 20px;
+    margin-left: 40px;
+    padding-top: 7px;
+    letter-spacing: 1px;
+    font-style: italic;
 }
 
+/*line that underlines RISKY*/
+.sidebar-right hr {
+  border-top: 2px solid rgba(255, 255, 255, 0.4);
+  margin-top: 0;
+}
+
+/*PROJECTS heading*/
+.projects-text{
+  font-size: 18px;
+  text-align: center;
+  margin-top: 10px;
+  text-decoration: underline;
+
+}
+
+
+/*project A/B/C*/
 .sidebar-right .listed-projects a {
   color: white;
   text-decoration: none;
   font-size: 12px;
-  margin-left: 55px;
-  
+  display: block;
+  text-align: center;
+  margin-top: 30px;
+
 }
+
+.sidebar-right .listed-projects a{
+  margin-left: 35;
+  font-size: 15px;
+
+}
+
 
 .sidebar-right .listed-projects a:hover {
   color: white; 
   font-weight: bold;
 }
 
-.risky-text{
-    font-size: 30px;
-    padding-right: 20px;
-    margin-left: 40px;
-    padding-top: 7px;
-}
- .projects-text{
-    margin-left: 50px;
 
- }
+
+
 
  @media (max-width: 768px) {
   .risky-text {
@@ -275,3 +301,5 @@ cursor: help;
 margin-left: 6px; 
 margin-bottom: 4px;
 }
+
+/*-------ADD RISK HTML PAGE-----*/
