@@ -45,7 +45,7 @@
             </div>
             <div class="mb-4">
               <label for="assign_to" class="form-label">Assign To:</label>
-              <select class="form-control" id="assigned_to" name="assigned_to" required>
+              <select title ="assigned" class="form-control" id="assigned_to" name="assigned_to" required>
                   ${users.map(user => `<option value="${user.id}">${user.name}</option>`).join('')}
               </select>
             </div>
