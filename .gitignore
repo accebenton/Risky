@@ -1,8 +1,25 @@
 # SQLite database files
+risktool.db
+risktool.db.sqbpro
+risktool.sqbpro
 *.db
 *.sqlite
-*.sqlpro # Based on your file list
-risktool.db # Specific filename
 
 # Node.js dependencies
 node_modules/
+
+# Development files
+pseudocode.txt
+still-to-do.md
+
+# Logs
+*.log
+logs/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# IDE specific files
+.vscode/
+.idea/
