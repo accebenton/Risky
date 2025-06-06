@@ -2,7 +2,7 @@
 //require in modules from node, require in db from db.js
 const express = require('express');
 const router = express.Router(); 
-
+const db = require('../../db');
 
 router.get('/viewrisk', (req, res) => {
   const id = req.query.id;
