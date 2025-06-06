@@ -1,0 +1,8 @@
+# SQLite database files
+*.db
+*.sqlite
+*.sqlpro # Based on your file list
+risktool.db # Specific filename
+
+# Node.js dependencies
+node_modules/
