@@ -119,7 +119,8 @@ router.get('/add-risk', (req, res) => {
                             <div class="mb-4">
                                 <label for="assigned_to" class="form-label">Assign to:</label>
                                 <!--insert drop down menu for users to choose another user rather than free type-->
-                                <select class="form-control" id="assigned_to" name="assigned_to" required>
+                                <select class="form-control" id="assigned_to" name="assigned_to" required></option>
+                                  <option value="" disabled selected hidden>Select a user</option>
                                     ${users.map(user => `<option value="${user.id}">${user.name}</option>`).join('')}
                                 </select>
                             </div>

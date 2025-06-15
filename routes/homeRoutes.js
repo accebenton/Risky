@@ -32,7 +32,7 @@ router.get('/home', (req, res) => {
     let sql = 
       `SELECT 
         risks.id,
-        risks.name,
+        risks.name AS risk_name,
         risks.date_created,
         risks.likelihood,
         risks.impact,
@@ -59,7 +59,7 @@ router.get('/home', (req, res) => {
           WHEN 'Low' THEN 4
         END`;
     } else if (sort ==='name'){
-      sql += ' ORDER BY name ASC';
+      sql += ' ORDER BY LOWER(risk_name) ASC';
     } else if (sort === 'assigned'){
       sql += ` ORDER BY assigned_to ASC`;
     } else if (sort === 'status'){
@@ -222,7 +222,7 @@ router.get('/home', (req, res) => {
             <td>
               <a href="/viewrisk?id=${risk.id}" class="risk-id-link">${risk.id}</a>
             </td>
-            <td>${risk.name}</td>
+            <td>${risk.risk_name}</td>
             <td>${risk.date_created}</td>
             <td>
               <span class="level-colour bg-${getLevelColour(risk.risk_level)} me-2">

@@ -16,7 +16,9 @@ router.post("/updaterisk", (req, res) => {
     const risk_status = req.body.status;
 
     // test because not sure whats causing error message
-    //console.log('UPDATE RISK › req.body =', req.body);
+    console.log('UPDATE RISK › req.body =', req.body);
+
+
 
   
     //checks if fields all have inputs, but maybe should change this since all fields might not need changed?
@@ -42,7 +44,7 @@ router.post("/updaterisk", (req, res) => {
       SET name = ?, likelihood = ?, impact = ?, risk_level = ?, assigned_to = ?, risk_status = ?
       WHERE id = ?
       `;
-  
+
     //run sql command above with values
     db.run(sql, [name, likelihood, impact, risk_level, assigned_to, risk_status, id], function(err){
       //error message 

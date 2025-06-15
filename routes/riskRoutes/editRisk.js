@@ -7,13 +7,26 @@ const db = require('../../db');
 
 router.post('/updaterisk', (req, res) => {
   const { id, title, likelihood, impact, risk_status, assigned_to } = req.body;
+  const score = Number(likelihood) * Number(impact);
 
-  const sql = `UPDATE risks SET name = ?, likelihood = ?, impact = ?, risk_status = ?, assigned_to = ? WHERE id = ?`;
+  let risk_level = 'Low';
+  if (score >= 6 && score <= 10) {
+    risk_level = 'Medium';
+  } else if (score >= 11 && score <= 15) {
+    risk_level = 'High';
+  } else if (score >= 16) {
+    risk_level = 'Critical';
+  }
 
-  db.run(sql, [title, likelihood, impact, risk_status, assigned_to, id], function(err) {
+  const sql = `UPDATE risks
+               SET name = ?, likelihood = ?, impact = ?, risk_status = ?, assigned_to = ?, risk_level = ? 
+               WHERE id = ?`;
+
+  db.run(sql, [title, likelihood, impact, risk_status, assigned_to, risk_level, id], function(err) {
     if (err) {
       return res.send('Update failed.');
     }
+    console.log(`Calculated score: ${score}, Assigned level: ${risk_level}`);
     res.redirect('/home');
   });
 });
