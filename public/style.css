@@ -316,7 +316,7 @@ margin-bottom: 4px;
 /* column titles */
 
 .kanban-column {
-  border: 1px solid #ccc;
+  border: 1px solid rgb(27, 27, 27);
   padding: 10px;
   min-height: 300px;
   width: 30%;
@@ -369,17 +369,21 @@ margin-bottom: 4px;
     flex-direction: column;
   }
 }
+
 .open-column {
-  background-color:  #e1f5fe;
+  background-color:  #7275ff;
+  border: 2px solid #2e31ff;
   
 }
 
 .in-progress-column {
-  background-color: #fff8e1; /* light yellow */
+  background-color: #fcff65; 
+  border: 2px solid rgb(218, 196, 0);
 }
 
 .closed-column {
-  background-color: #e8f5e9; /* light green */
+  background-color: #4cff5b; 
+  border: 2px solid rgb(0, 163, 0);
 }
 /*styling for all cards */
 .risk-card {
@@ -387,4 +391,14 @@ margin-bottom: 4px;
   padding: 12px 16px;
   margin-bottom: 12px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/*------------------------ADD RISK PAGE --------------------*/
+
+.add-risk-main{
+  background-color:#333333;
+}
+.outer{
+  height: 100vh;
+  background-color: #d3d3d3;
 }

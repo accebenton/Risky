@@ -1,0 +1,404 @@
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+
+}
+
+.main-container{
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+/*-----------BUTTONS----------------*/
+
+.add-new-risk{
+  border: 2px solid #C39000;
+  background-color: #FFB74D;
+  color: black;                
+  }
+
+.kanban-view{
+  border: 2px solid #5486a3;
+  background-color: #4DD0E1;  
+  color: #000;
+}
+ 
+.search-button{
+  border: 2px solid white;
+  color: white;
+}
+
+/*hover response of buttons*/
+.add-new-risk:hover {
+  background-color: #FFA726; 
+}
+
+.kanban-view:hover {
+  background-color: #26C6DA; 
+}
+
+.btn:hover {
+  filter: brightness(0.9);
+}
+
+/*--------------SIDEBAR CONTAINER-----------*/
+#sidebar{
+    max-width: 150px;
+    background-color: #333333;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    color: white;
+    padding: 0px 20px;
+    height: auto;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 20px;
+}
+/*for responsive sizing*/
+@media (max-width: 768px) {
+  .sidebar-right {
+    width: 150px;
+  }
+
+  .risky-text {
+    font-size: 20px;
+    margin-left: 15px;
+    padding-right: 10px;
+  }
+
+  .projects-text {
+    font-size: 16px;
+    margin-left: 15px;
+  }
+}
+
+/*RISKY logo font*/
+.risky-text{
+    font-size: 30px;
+    padding-right: 40px;
+    margin-left: 20px;
+    padding-top: 7px;
+    letter-spacing: 1px;
+    font-style: italic;
+}
+
+/*line that underlines RISKY*/
+.sidebar-right hr {
+  border-top: 2px solid rgba(255, 255, 255, 0.4);
+  margin-top: 0;
+}
+
+/*PROJECTS heading*/
+.projects-text{
+  font-size: 18px;
+  text-align: center;
+  margin-top: 10px;
+  text-decoration: underline;
+
+}
+
+
+/*project A/B/C*/
+.sidebar-right .listed-projects a {
+  color: white;
+  text-decoration: none;
+  font-size: 12px;
+  display: block;
+  text-align: center;
+  margin-top: 30px;
+
+}
+
+.sidebar-right .listed-projects a{
+  margin-left: 35;
+  font-size: 15px;
+
+}
+
+
+.sidebar-right .listed-projects a:hover {
+  color: white; 
+  font-weight: bold;
+}
+
+
+
+
+
+ @media (max-width: 768px) {
+  .risky-text {
+    font-size: 20px;
+    margin-left: 20px;
+    padding-right: 10px;
+  }
+
+  .projects-text {
+    font-size: 16px;
+    margin-left: 20px;
+  }
+}
+
+
+/*-----SUCCESS MESSAGE ----------*/
+
+.custom-alert {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  min-width: 280px;
+  max-width: 400px;
+  border-radius: 8px;
+  opacity: 0.95;
+  transition: opacity 0.5s ease;
+  font-size: 16px;
+}
+
+.alert-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.alert-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.alert-info {
+  background-color: #17a2b8;
+  color: white;
+}
+
+/*--------------NAVIGATION BAR AT TOP----------------*/
+nav {
+  background-color: #333333;
+}
+
+.profile-icon{
+    width: 25%;
+}
+.search-bar-cont{
+    width: 50%;
+    padding-left: 30px;
+}
+.search-bar-form{
+    max-width: 400px;
+    width: 100%;
+}
+.settings-logout-cont{
+    width:25%;
+}
+
+
+
+/*----------------------------------RISK TABLE-------------------------------------*/
+
+
+/*----------------SORT DROPDOWN--------------*/
+.sort-dropdown{
+  margin-top: 30px;
+  margin-bottom: 0px;
+  margin-left:0px;
+  padding-bottom: 0px;
+  padding-left: 0;
+
+}
+/*Sort By text*/
+.table-responsive label{
+  width: 20%;
+  padding-right: 10px;
+
+  
+}
+
+/*Risks Dashboard heading*/
+.table-container h1{
+  padding: 0px;
+  margin: 10px;
+  text-decoration: underline;
+}
+
+.table-container{
+  padding-left: 20px;
+}
+
+.table-responsive{
+  padding-top: 0px;
+  padding-right: 20px;
+  padding-left: 20px;
+  margin-top: 0px;
+}
+
+.table-responsive form{
+  width: 35%;
+  padding-top: 0;
+  margin-top: 0;
+
+}
+
+
+.table-header th{
+  background-color: #757575;
+  color: white;
+  border-top: solid black 1px;
+  border-bottom: solid black 1px;
+
+}
+/*Risk id buttons to go to /viewrisk*/
+.risk-id-link {
+  color: #174ab8;
+  text-decoration: none;
+  font-weight: bold;
+  
+}
+
+.risk-id-link:hover {
+  color: #000000;
+  text-decoration: underline;
+}
+
+
+.table td{
+  border-top: solid black 1px;
+  border-bottom: solid black 1px;
+}
+
+/*risk status and severity(level) icon colours*/
+.status-colour,
+.level-colour {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85em;
+  font-weight: bold;
+  display: inline-block;
+  min-width: 80px;
+  text-align: center;
+}
+
+/* status backgrounds*/
+.bg-open        { background-color: #0d6efd; color: white; }
+.bg-inprogress  { background-color: #e0a800; color: white; }
+.bg-closed      { background-color: #6c757d; color: white; }
+
+/*risk level backgrounds */
+.bg-critical    { background-color: #dc3545; color: white; }
+.bg-high        { background-color: #fd7e14; color: white; }
+.bg-medium      { background-color: #198754; color: white; }
+.bg-low         { background-color: #1bbd89; color: white; }
+
+/*--FOOTER MESSAGE GDPR --*/
+footer.footer {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+th img {
+width: 16px;
+height: 16px; 
+cursor: help; 
+margin-left: 6px; 
+margin-bottom: 4px;
+}
+
+/*-------KANBAN HTML PAGE-----*/
+/* kanban columns */
+.kanban-column {
+  border: 1px solid #ddd;
+  padding: 16px;
+  border-radius: 8px;
+  min-height: 400px;
+  width: 100%;
+}
+
+/* column titles */
+
+.kanban-column {
+  border: 1px solid rgb(27, 27, 27);
+  padding: 10px;
+  min-height: 300px;
+  width: 30%;
+  float: left;
+  margin-right: 10px;
+  background: #f8f9fa;
+}
+
+.risk-card {
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+
+.kanban-column h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+/* status cards */
+.kanban-card {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.kanban-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* main container layout */
+.kanban-board {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+/* responsive layout */
+@media (max-width: 768px) {
+  .kanban-board {
+    flex-direction: column;
+  }
+}
+
+.open-column {
+  background-color:  #7275ff;
+  border: 2px solid #2e31ff;
+  
+}
+
+.in-progress-column {
+  background-color: #fcff65; 
+  border: 2px solid rgb(218, 196, 0);
+}
+
+.closed-column {
+  background-color: #4cff5b; 
+  border: 2px solid rgb(0, 163, 0);
+}
+/*styling for all cards */
+.risk-card {
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/*------------------------ADD RISK PAGE --------------------*/
+
+.add-risk-main{
+  background-color:#333333;
+}
+.outer{
+  height: 100vh;
+  background-color: #d3d3d3;
+}
