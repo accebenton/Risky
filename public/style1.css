@@ -1,0 +1,32 @@
+.body {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+grid-template-rows: repeat(2, 1fr);
+}
+
+/*------NAV BAR -----*/
+.nav-bar{  
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 30px 10px;
+    padding-bottom:60px;
+
+}
+
+.risky-title h1{
+    font-family: "Inconsolata";
+    letter-spacing: 15px;
+}
+
+
+/*-----MAIN SECTION -----*/
+.main-section{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+}
+
+
+
